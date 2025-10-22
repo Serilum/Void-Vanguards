@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.natamus.voidvanguards.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "EvokerMixin",
+    "ItemFrameMixin",
+    "MobMixin",
+    "NearestAttackableTargetGoalMixin",
+    "PillagerMixin",
+    "VillagerMixin",
+    "VindicatorMixin"
+  ],
+  "client": [
+    "ChatComponentMixin",
+    "GameRendererMixin",
+    "LevelRendererMixin"
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

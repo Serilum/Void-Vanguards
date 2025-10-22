@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "voidvanguards",
+  "version": "1.0",
+
+  "name": "Void Vanguards",
+  "description": "ModJam 2025: Void Vanguards is a story-driven mod about the conflict between the Vanguard and the Voidborn.",
+  "authors": [ "Rick South" ],
+  "contact": {
+    "homepage": "https://serilum.com/mod/void-vanguards",
+    "sources": "https://github.com/Serilum/Void-Vanguards",
+    "issues": "https://github.com/Serilum/.issue-tracker/labels/Mod:%20Void%20Vanguards"
+  },
+
+  "license": "All Right Reserved",
+  "icon": "icon.png",
+
+  "environment": "*",
+  "entrypoints": { "main": [ "com.natamus.voidvanguards.ModFabric" ], "client": [ "com.natamus.voidvanguards.ModFabricClient" ], "modmenu": [ "com.natamus.voidvanguards.fabric.config.IntegrateModMenu" ] },
+  "mixins": [
+    "voidvanguards.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric": "*",
+    "minecraft": ">=1.21",
+    "java": ">=21",
+    "collective": ">=8.11"
+  },
+
+  "custom": {
+    "modmenu": {
+      "links": {
+        "Donate <3" : "https://ricksouth.com/donate"
+      }
+    }
+  },
+
+  "contributors": [
+	  " ",
+	  "Thank you very much to my Membership sponsors for supporting the development of this mod!",
+	  " ",
+	  "If you would like to contribute too, check out https://serilum.com/donate.",
+	  " ",
+	  "Membership sponsors:",
+	  " Alister",
+	  " Andrean Olgo",
+	  " aternosorg",
+	  " Cherriesaurus",
+	  " Michael W. S.",
+	  " t128",
+	  " Tyler Behl",
+	  " William Innes",
+	  " XAgent",
+	  " ตัวตรึง พระนคร"
+  ]
+}

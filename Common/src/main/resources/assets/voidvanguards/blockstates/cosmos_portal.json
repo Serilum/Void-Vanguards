@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "voidvanguards:block/cosmos_portal_ns"
+    },
+    "axis=z": {
+      "model": "voidvanguards:block/cosmos_portal_ew"
+    }
+  }
+}

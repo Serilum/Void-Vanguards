@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"PEP",
+		"IRI",
+		"IAI"
+	],
+	"key": {
+		"P": { "item": "minecraft:prismarine_crystals" },
+		"I": { "item": "minecraft:iron_ingot" },
+		"R": { "item": "minecraft:redstone" },
+		"E": { "item": "minecraft:ender_eye" },
+		"A": { "item": "minecraft:amethyst_shard" }
+	},
+	"result": {
+		"id": "voidvanguards:orbital_transponder",
+		"count": 1
+	}
+}
