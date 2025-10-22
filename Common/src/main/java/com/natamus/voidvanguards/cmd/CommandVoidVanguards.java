@@ -37,7 +37,7 @@ public class CommandVoidVanguards {
 			.executes((command) -> {
 				CommandSourceStack source = command.getSource();
 
-				SkyShipFunctions.resetSkyShipVariables();
+				SkyShipFunctions.resetSkyShipVariables(true);
 
 				MessageFunctions.sendMessage(source, Component.translatable("voidvanguards.message.skyship.reset").withStyle(ChatFormatting.DARK_GREEN));
 

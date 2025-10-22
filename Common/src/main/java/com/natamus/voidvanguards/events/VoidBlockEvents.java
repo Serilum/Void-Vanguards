@@ -1,6 +1,7 @@
 package com.natamus.voidvanguards.events;
 
 import com.mojang.datafixers.util.Pair;
+import com.natamus.collective.functions.BlockPosFunctions;
 import com.natamus.collective.functions.MessageFunctions;
 import com.natamus.collective.services.Services;
 import com.natamus.voidvanguards.data.ServerSaveData;
@@ -88,13 +89,13 @@ public class VoidBlockEvents {
 
 			BlockPos gatePos;
 			if (cosmosGatePair == null) {
-				gatePos = Util.getRANDOMVoidbornCosmosGateCoordinates(overworldLevel, serverPlayer);
+				gatePos = Util.getRANDOMVoidbornCosmosGateCoordinates(overworldLevel, serverPlayer).east(3);
 			}
 			else {
-				gatePos = cosmosGatePair.getSecond();
+				gatePos = cosmosGatePair.getSecond().east(3);
 			}
 
-			Services.TELEPORT.teleportEntity(serverPlayer, overworldLevel, gatePos);
+			Services.TELEPORT.teleportEntity(serverPlayer, overworldLevel, BlockPosFunctions.getSurfaceBlockPos(overworldLevel, gatePos.getX(), gatePos.getZ()));
 			MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.voidborn.cosmos_gate.enterSuccess.again").withStyle(ChatFormatting.DARK_PURPLE), true);
 		}
 		else if (block instanceof LeverBlock) {

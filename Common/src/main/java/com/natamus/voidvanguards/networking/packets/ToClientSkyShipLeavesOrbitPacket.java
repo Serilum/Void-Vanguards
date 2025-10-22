@@ -34,7 +34,7 @@ public class ToClientSkyShipLeavesOrbitPacket {
 				return;
 			}
 
-			SkyShipFunctions.resetSkyShipVariables();
+			SkyShipFunctions.resetSkyShipVariables(false);
 
 			Player player = ClientConstants.mc.player;
 			if (player == null) {

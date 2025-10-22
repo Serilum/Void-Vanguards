@@ -25,7 +25,7 @@ public class VoidClientEvents {
 							Component.translatable("voidvanguards.message.skyship.lost_focus").withStyle(ChatFormatting.RED), true
 					);
 				}
-				SkyShipFunctions.resetSkyShipVariables();
+				SkyShipFunctions.resetSkyShipVariables(true);
 			}
 		}
 
@@ -62,6 +62,6 @@ public class VoidClientEvents {
 	}
 
 	public static void onClientLogout() {
-		SkyShipFunctions.resetSkyShipVariables();
+		SkyShipFunctions.resetSkyShipVariables(false);
 	}
 }

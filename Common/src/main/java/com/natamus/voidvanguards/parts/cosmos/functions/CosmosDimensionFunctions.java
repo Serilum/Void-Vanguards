@@ -39,7 +39,7 @@ public class CosmosDimensionFunctions {
 		BlockPos vanguardStationPos = CosmosDimensionUtil.getUniqueBlockPositionFromUUID(serverPlayer.getUUID(), CosmosLocation.VANGUARD_STATION);
 
 		BlockPos spawnPos;
-		if (!ServerSaveData.get().vanguardStationGeneratedPlayerUUIDS.contains(playerUUID)) {
+		if (!ServerSaveData.get().vanguardStationGeneratedPlayerUUIDS.contains(playerUUID) || ServerSaveData.get().gaveVoidbornLeaderRadioPlayerUUIDS.contains(playerUUID)) {
 			prepareCosmosSpawnArea(cosmosLevel, serverPlayer, vanguardStationPos);
 
 			spawnPos = vanguardStationPos.offset(0, 51, -10);
@@ -89,6 +89,8 @@ public class CosmosDimensionFunctions {
 
 	public static void teleportPlayerToVoidbornBase(ServerLevel serverLevel, ServerPlayer serverPlayer) {
 		UUID playerUUID = serverPlayer.getUUID();
+
+		VoidbornFunctions.skipCheck.put(playerUUID, 5);
 
 		ServerLevel cosmosLevel = Util.getCosmosLevel(serverLevel.getServer());
 		BlockPos voidbornCosmosBasePos = CosmosDimensionUtil.getUniqueBlockPositionFromUUID(serverPlayer.getUUID(), CosmosLocation.VOIDBORN_BASE);

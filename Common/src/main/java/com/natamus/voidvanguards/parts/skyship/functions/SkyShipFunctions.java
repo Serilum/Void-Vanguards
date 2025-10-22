@@ -106,8 +106,8 @@ public class SkyShipFunctions {
 		Dispatcher.sendToServer(new ToServerTriggerSkyShipEventPacket());
 	}
 
-	public static void resetSkyShipVariables() {
-		SkyShipVariables.skyShipVisible = false;
+	public static void resetSkyShipVariables(boolean shipVisible) {
+		SkyShipVariables.skyShipVisible = shipVisible;
 
 		SkyShipVariables.triggeredSkyShipEvent = false;
 		SkyShipVariables.focusedOnSkyShip = false;

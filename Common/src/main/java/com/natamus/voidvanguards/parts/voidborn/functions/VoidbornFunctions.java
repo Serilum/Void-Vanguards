@@ -181,7 +181,7 @@ public class VoidbornFunctions {
 		}, 0);
 	}
 
-	private static final HashMap<UUID, Integer> skipCheck = new HashMap<>();
+	public static final HashMap<UUID, Integer> skipCheck = new HashMap<>();
 	public static void checkVoidbornLeftForStoryTrigger(ServerLevel cosmosLevel, ServerPlayer serverPlayer) {
 		if (cosmosLevel.getDifficulty().equals(Difficulty.PEACEFUL)) {
 			return;

@@ -138,8 +138,8 @@ public class VanguardUtil {
 
 	public static void keepPlayersWithinVanguardCircle(ServerPlayer serverPlayer, String forcedTag) {
 		String rawPositionPart = forcedTag.substring(
-				forcedTag.indexOf("forcedPlayerPosition..") + "forcedPlayerPosition..".length(),
-				forcedTag.indexOf("--radius..")
+			forcedTag.indexOf("forcedPlayerPosition..") + "forcedPlayerPosition..".length(),
+			forcedTag.indexOf("--radius..")
 		);
 		String rawRadiusPart = forcedTag.substring(forcedTag.indexOf("--radius..") + "--radius..".length());
 
@@ -156,14 +156,17 @@ public class VanguardUtil {
 		}
 
 		BlockPos centerPos = new BlockPos(x, y, z);
-		double distanceSquared = serverPlayer.blockPosition().distSqr(centerPos);
+
+		double dx = serverPlayer.getX() - centerPos.getX();
+		double dz = serverPlayer.getZ() - centerPos.getZ();
+		double distanceSquared = dx * dx + dz * dz;
 
 		if (distanceSquared > (radius * radius)) {
-			serverPlayer.teleportTo(centerPos.getX()+0.5, centerPos.getY(), centerPos.getZ()+0.5);
-
+			serverPlayer.teleportTo(centerPos.getX() + 0.5, serverPlayer.getY(), centerPos.getZ() + 0.5);
 			spawnTeleportParticles(serverPlayer.serverLevel(), centerPos);
 		}
 	}
+
 
 	public static void oblibirateTreeAbovePosition(ServerLevel serverLevel, BlockPos blockPos, int height, int radius) {
 		MinecraftServer minecraftServer = serverLevel.getServer();
