@@ -46,7 +46,7 @@ import java.util.List;
 public class VanguardFunctions {
 
 	public static void initialPostSkyShipEventTrigger(ServerLevel serverLevel, ServerPlayer serverPlayer) {
-		MessageFunctions.broadcastMessage(serverLevel, Component.translatable("voidvanguards.message.skyship.server_trigger", serverPlayer.getName().getString()).withStyle(ChatFormatting.GOLD));
+		MessageFunctions.broadcastMessage(serverLevel, Component.translatable("collective.voidvanguards.message.skyship.server_trigger", serverPlayer.getName().getString()).withStyle(ChatFormatting.GOLD));
 
 		TaskFunctions.enqueueCollectiveServerTask(serverLevel.getServer(), () -> {
 			spawnInitialVanguardsAroundPlayer(serverLevel, serverPlayer);

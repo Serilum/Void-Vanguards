@@ -22,7 +22,7 @@ public class VoidClientEvents {
 			} else if (!SkyShipVariables.triggeredSkyShipEvent && SkyShipVariables.focusedOnSkyShip) {
 				if (SkyShipVariables.sentFocusMessage) {
 					ClientConstants.mc.player.displayClientMessage(
-							Component.translatable("voidvanguards.message.skyship.lost_focus").withStyle(ChatFormatting.RED), true
+							Component.translatable("collective.voidvanguards.message.skyship.lost_focus").withStyle(ChatFormatting.RED), true
 					);
 				}
 				SkyShipFunctions.resetSkyShipVariables(true);

@@ -166,10 +166,10 @@ public class VoidbornFunctions {
 			serverLevel.setBlockAndUpdate(signPos, Blocks.WARPED_WALL_SIGN.defaultBlockState().setValue(WallSignBlock.FACING, Direction.WEST));
 			if (serverLevel.getBlockEntity(signPos) instanceof SignBlockEntity signBlockEntity) {
 				SignText signText = signBlockEntity.getFrontText();
-				signText = signText.setMessage(0, Component.translatable("voidvanguards.message.voidborn.base.radarSign.text.0").withStyle(ChatFormatting.WHITE));
-				signText = signText.setMessage(1, Component.translatable("voidvanguards.message.voidborn.base.radarSign.text.1").withStyle(ChatFormatting.WHITE));
-				signText = signText.setMessage(2, Component.translatable("voidvanguards.message.voidborn.base.radarSign.text.2").withStyle(ChatFormatting.WHITE));
-				signText = signText.setMessage(3, Component.translatable("voidvanguards.message.voidborn.base.radarSign.text.3").withStyle(ChatFormatting.WHITE));
+				signText = signText.setMessage(0, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.0").withStyle(ChatFormatting.WHITE));
+				signText = signText.setMessage(1, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.1").withStyle(ChatFormatting.WHITE));
+				signText = signText.setMessage(2, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.2").withStyle(ChatFormatting.WHITE));
+				signText = signText.setMessage(3, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.3").withStyle(ChatFormatting.WHITE));
 
 				signBlockEntity.setText(signText, true);
 
@@ -259,7 +259,7 @@ public class VoidbornFunctions {
 
 		VoidbornUtil.spawnLightningAtRadarEndRods(serverPlayer);
 
-		MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.voidborn.base.radarLever.flip").withStyle(ChatFormatting.RED));
+		MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.base.radarLever.flip").withStyle(ChatFormatting.RED));
 
 		ServerSaveData.get().sabotagedVoidbornRadarPlayerUUIDS.add(playerUUID);
 		SaveLoadUtils.savePlayerData(serverPlayer);

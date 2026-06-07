@@ -89,7 +89,7 @@ public class SkyShipFunctions {
 			SkyShipVariables.skyShipDetailLevel += 1;
 			SkyShipVariables.ticksLeftForMoreDetail = ConfigHandler.ticksNeededForMoreSkyShipDetail;
 
-			player.displayClientMessage(Component.translatable("voidvanguards.message.skyship.more_detailed").withStyle(ChatFormatting.GREEN), true);
+			player.displayClientMessage(Component.translatable("collective.voidvanguards.message.skyship.more_detailed").withStyle(ChatFormatting.GREEN), true);
 			SkyShipVariables.sentFocusMessage = true;
 		}
 	}
@@ -101,7 +101,7 @@ public class SkyShipFunctions {
 
 		SkyShipVariables.triggeredSkyShipEvent = true;
 
-		player.displayClientMessage(Component.translatable("voidvanguards.message.skyship.explosion").withStyle(ChatFormatting.BLUE), true);
+		player.displayClientMessage(Component.translatable("collective.voidvanguards.message.skyship.explosion").withStyle(ChatFormatting.BLUE), true);
 
 		Dispatcher.sendToServer(new ToServerTriggerSkyShipEventPacket());
 	}

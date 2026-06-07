@@ -39,7 +39,7 @@ public class CommandVoidVanguards {
 
 				SkyShipFunctions.resetSkyShipVariables(true);
 
-				MessageFunctions.sendMessage(source, Component.translatable("voidvanguards.message.skyship.reset").withStyle(ChatFormatting.DARK_GREEN));
+				MessageFunctions.sendMessage(source, Component.translatable("collective.voidvanguards.message.skyship.reset").withStyle(ChatFormatting.DARK_GREEN));
 
 				return 1;
 			}))
@@ -50,22 +50,22 @@ public class CommandVoidVanguards {
 
 				ServerPlayer serverPlayer = source.getPlayer();
 				if (!Util.isInCosmosDimension(serverPlayer)) {
-					MessageFunctions.sendMessage(source, Component.literal("You are not in the cosmos dimension.").withStyle(ChatFormatting.RED));
+					MessageFunctions.sendMessage(source, Component.translatable("collective.voidvanguards.message.cosmosdimension").withStyle(ChatFormatting.RED));
 					return 1;
 				}
 
 				UUID playerUUID = serverPlayer.getUUID();
 
 				if (!ServerSaveData.get().originalPlayerPositions.containsKey(playerUUID)) {
-					MessageFunctions.sendMessage(source, Component.literal("Original location is not in save data.").withStyle(ChatFormatting.RED));
+					MessageFunctions.sendMessage(source, Component.translatable("collective.voidvanguards.message.originallocationsave").withStyle(ChatFormatting.RED));
 					return 1;
 				}
 
 				if (Util.teleportPlayerToOriginalPosition(serverPlayer)) {
-					MessageFunctions.sendMessage(source, Component.literal("Returned to the original location.").withStyle(ChatFormatting.DARK_GREEN));
+					MessageFunctions.sendMessage(source, Component.translatable("collective.voidvanguards.message.returnedoriginallocation").withStyle(ChatFormatting.DARK_GREEN));
 				}
 				else {
-					MessageFunctions.sendMessage(source, Component.literal("Unable to return player to original position.").withStyle(ChatFormatting.RED));
+					MessageFunctions.sendMessage(source, Component.translatable("collective.voidvanguards.message.unablereturnplayer").withStyle(ChatFormatting.RED));
 				}
 
 				return 1;
@@ -88,7 +88,7 @@ public class CommandVoidVanguards {
 
 				VoidbornFunctions.generateVoidbornCosmosGate(serverPlayer.serverLevel(), serverPlayer, serverPlayer.blockPosition().offset(5, 0, 5));
 
-				MessageFunctions.sendMessage(serverPlayer, "Generated cosmos gate.", ChatFormatting.DARK_GREEN);
+				MessageFunctions.sendTranslatableMessage(serverPlayer, "collective.voidvanguards.message.generatedcosmosgate", ChatFormatting.DARK_GREEN);
 				return 1;
 			})))
 
@@ -101,7 +101,7 @@ public class CommandVoidVanguards {
 
 				CosmosDimensionFunctions.teleportPlayerToVoidbornBase(serverPlayer.serverLevel(), serverPlayer);
 
-				MessageFunctions.sendMessage(serverPlayer, "Teleported to voidborn base.", ChatFormatting.DARK_GREEN);
+				MessageFunctions.sendTranslatableMessage(serverPlayer, "collective.voidvanguards.message.teleportedvoidbornbase", ChatFormatting.DARK_GREEN);
 				return 1;
 			})))
 
@@ -117,7 +117,7 @@ public class CommandVoidVanguards {
 					}
 				}
 
-				MessageFunctions.sendMessage(serverPlayer, "Removed all Void Vanguards tags.", ChatFormatting.DARK_GREEN);
+				MessageFunctions.sendTranslatableMessage(serverPlayer, "collective.voidvanguards.message.removedtags", ChatFormatting.DARK_GREEN, Reference.NAME);
 				return 1;
 			})))
 
@@ -126,8 +126,8 @@ public class CommandVoidVanguards {
 			.executes((command) -> {
 				CommandSourceStack source = command.getSource();
 
-				MessageFunctions.sendMessage(source, "You can generate the following heads:", ChatFormatting.DARK_GREEN);
-				MessageFunctions.sendMessage(source, " Usage: /" + Reference.MOD_ID + " head <name> <amount>:", ChatFormatting.DARK_GREEN);
+				MessageFunctions.sendTranslatableMessage(source, "collective.voidvanguards.message.generatefollowingheads", ChatFormatting.DARK_GREEN);
+				MessageFunctions.sendTranslatableMessage(source, " ", "collective.voidvanguards.message.usageheadname", ChatFormatting.DARK_GREEN, Reference.MOD_ID);
 
 				List<String> headNames = new ArrayList<>(HeadData.headMap.keySet());
 				Collections.sort(headNames);
@@ -155,8 +155,8 @@ public class CommandVoidVanguards {
 		String headName = StringArgumentType.getString(command, "head-name").toLowerCase();
 
 		if (!HeadData.headMap.containsKey(headName)) {
-			MessageFunctions.sendMessage(source, "The headName '" + headName + "' does not exist. You can get a list of all possible heads with:", ChatFormatting.RED);
-			MessageFunctions.sendMessage(source, " Usage: /" + Reference.MOD_ID + " head list", ChatFormatting.RED);
+			MessageFunctions.sendTranslatableMessage(source, "collective.voidvanguards.message.headnameexistget", ChatFormatting.RED, headName);
+			MessageFunctions.sendTranslatableMessage(source, " ", "collective.voidvanguards.message.usageheadlist", ChatFormatting.RED, Reference.MOD_ID);
 			return 1;
 		}
 
@@ -165,7 +165,7 @@ public class CommandVoidVanguards {
 			player = source.getPlayerOrException();
 		}
 		catch (CommandSyntaxException ex) {
-			MessageFunctions.sendMessage(source, "This command can only be executed as a player in-game.", ChatFormatting.RED);
+			MessageFunctions.sendTranslatableMessage(source, "collective.shared.message.playeronly", ChatFormatting.RED);
 			return 1;
 		}
 
@@ -180,7 +180,7 @@ public class CommandVoidVanguards {
 			s = "s";
 		}
 
-		MessageFunctions.sendMessage(source, "Successfully generated " + amount + " " + StringFunctions.capitalizeFirst(headName.replace("_", " ")) + " head" + s + ".", ChatFormatting.DARK_GREEN);
+		MessageFunctions.sendTranslatableMessage(source, "collective.shared.message.successfullygeneratedhead", ChatFormatting.DARK_GREEN, amount, StringFunctions.capitalizeFirst(headName.replace("_", " ")));
 		return 1;
 	}
 

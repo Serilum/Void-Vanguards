@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "voidvanguards",
-  "version": "1.1",
+  "version": "1.2",
 
   "name": "Void Vanguards",
   "description": "ModJam 2025: Void Vanguards is a story-driven mod about the conflict between the Vanguard and the Voidborn.",
@@ -26,7 +26,7 @@
     "fabric": "*",
     "minecraft": ">=1.21",
     "java": ">=21",
-    "collective": ">=8.11"
+    "collective": ">=8.25"
   },
 
   "custom": {
@@ -44,15 +44,12 @@
 	  "If you would like to contribute too, check out https://serilum.com/donate.",
 	  " ",
 	  "Membership sponsors:",
-	  " Alister",
 	  " Andrean Olgo",
 	  " aternosorg",
 	  " Cherriesaurus",
-	  " Michael W. S.",
-	  " t128",
-	  " Tyler Behl",
-	  " William Innes",
-	  " XAgent",
-	  " ตัวตรึง พระนคร"
+	  " Linda Jansen",
+	  " Michelle Smith",
+	  " MWS",
+	  " Tyler Behl"
   ]
 }

@@ -58,11 +58,11 @@ public class VoidbornUtil {
 		voidbornMob.setPos(blockPos.getX()+0.5, blockPos.getY(), blockPos.getZ()+0.5);
 
 		if (isLeader) {
-			voidbornMob.setCustomName(Component.translatable("voidvanguards.voidborn.name.leader").withStyle(ChatFormatting.DARK_PURPLE));
+			voidbornMob.setCustomName(Component.translatable("collective.voidvanguards.voidborn.name.leader").withStyle(ChatFormatting.DARK_PURPLE));
 			voidbornMob.setItemSlot(EquipmentSlot.HEAD, HeadData.getGeneratedHead(HeadData.HeadType.VOIDBORN_LEADER));
 		}
 		else {
-			voidbornMob.setCustomName(Component.translatable("voidvanguards.voidborn.name.recruit"));
+			voidbornMob.setCustomName(Component.translatable("collective.voidvanguards.voidborn.name.recruit"));
 			voidbornMob.setItemSlot(EquipmentSlot.HEAD, HeadData.getGeneratedHead(HeadData.HeadType.VOIDBORN));
 		}
 
@@ -121,7 +121,7 @@ public class VoidbornUtil {
 	public static void fillChestWithItems(ServerLevel serverLevel, BlockEntity blockEntity, BlockPos blockPos, BlockState blockState, Registry<Enchantment> enchantmentRegistry) {
 		if (blockEntity instanceof ChestBlockEntity chestBlockEntity) {
 			DataComponentMap.Builder dataComponentMapBuilder = DataComponentMap.builder();
-			dataComponentMapBuilder.set(DataComponents.CUSTOM_NAME, Component.translatable("voidvanguards.voidborn.chest.title"));
+			dataComponentMapBuilder.set(DataComponents.CUSTOM_NAME, Component.translatable("collective.voidvanguards.voidborn.chest.title"));
 			chestBlockEntity.setComponents(dataComponentMapBuilder.build());
 
 			int chestSize = chestBlockEntity.getContainerSize();

@@ -96,7 +96,7 @@ public class VoidBlockEvents {
 			}
 
 			Services.TELEPORT.teleportEntity(serverPlayer, overworldLevel, BlockPosFunctions.getSurfaceBlockPos(overworldLevel, gatePos.getX(), gatePos.getZ()));
-			MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.voidborn.cosmos_gate.enterSuccess.again").withStyle(ChatFormatting.DARK_PURPLE), true);
+			MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.cosmos_gate.enterSuccess.again").withStyle(ChatFormatting.DARK_PURPLE), true);
 		}
 		else if (block instanceof LeverBlock) {
 			if (!VoidbornUtil.isBlockPosRadarLeverPosition(serverPlayer, blockPos)) {
@@ -104,7 +104,7 @@ public class VoidBlockEvents {
 			}
 
 			if (ServerSaveData.get().sabotagedVoidbornRadarPlayerUUIDS.contains(serverPlayer.getUUID())) {
-				MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.voidborn.base.radarLever.flip.unable").withStyle(ChatFormatting.DARK_GRAY));
+				MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.base.radarLever.flip.unable").withStyle(ChatFormatting.DARK_GRAY));
 				return InteractionResult.FAIL;
 			}
 

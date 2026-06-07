@@ -47,8 +47,8 @@ import java.util.UUID;
 
 public class StoryFunctions {
 	public static void processVanguardInitialCosmos(ServerLevel serverLevel, ServerPlayer serverPlayer, BlockPos spawnPos, List<LivingEntity> vanguards) {
-		String baseKey = "voidvanguards.message.vanguards.cosmos.initial.";
-		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("voidvanguards.vanguard.name.leader", ChatFormatting.DARK_RED, true);
+		String baseKey = "collective.voidvanguards.message.vanguards.cosmos.initial.";
+		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("collective.voidvanguards.vanguard.name.leader", ChatFormatting.DARK_RED, true);
 
 		int flickerDelay = -1;
 
@@ -59,7 +59,7 @@ public class StoryFunctions {
 			String rawMessage = messageTextComponent.getString();
 			if (rawMessage.contains("%s")) {
 				if (i == 8) {
-					messageTextComponent = Component.translatable(baseKey + i, Component.translatable("voidvanguards.voidborn.name").withStyle(ChatFormatting.DARK_PURPLE));
+					messageTextComponent = Component.translatable(baseKey + i, Component.translatable("collective.voidvanguards.voidborn.name").withStyle(ChatFormatting.DARK_PURPLE));
 				}
 				else {
 					messageTextComponent = Component.translatable(baseKey + i, serverPlayer.getName());
@@ -99,7 +99,7 @@ public class StoryFunctions {
 					VanguardFunctions.generateRadioAtPlayerPosition(serverPlayer);
 				}, 100);
 
-				MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.vanguards.home.initial.1").withStyle(ChatFormatting.GOLD), true);
+				MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.vanguards.home.initial.1").withStyle(ChatFormatting.GOLD), true);
 			}
 		}, totalDelay - lastDelay);
 	}
@@ -109,7 +109,7 @@ public class StoryFunctions {
 
 		UUID playerUUID = serverPlayer.getUUID();
 
-		String baseKey = "voidvanguards.message.vanguards.radio.initial.";
+		String baseKey = "collective.voidvanguards.message.vanguards.radio.initial.";
 		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("item.voidvanguards.orbital_radio", ChatFormatting.AQUA, true);
 
 		if (!ServerSaveData.get().voidbornCosmosGatePositionPlayerUUIDS.containsKey(playerUUID)) {
@@ -125,7 +125,7 @@ public class StoryFunctions {
 				String rawMessage = messageTextComponent.getString();
 				if (rawMessage.contains("%s")) {
 					if (i == 8) {
-						messageTextComponent = Component.translatable(baseKey + i, Component.translatable("voidvanguards.voidborn.name").withStyle(ChatFormatting.DARK_PURPLE));
+						messageTextComponent = Component.translatable(baseKey + i, Component.translatable("collective.voidvanguards.voidborn.name").withStyle(ChatFormatting.DARK_PURPLE));
 					} else if (i == 11) {
 						messageTextComponent = Component.translatable(baseKey + i, Component.literal(voidbornBaseBlockPos.getX() + ", " + voidbornBaseBlockPos.getY() + ", " + voidbornBaseBlockPos.getZ()).withStyle(ChatFormatting.GOLD));
 					} else {
@@ -158,8 +158,8 @@ public class StoryFunctions {
 			// Overworld only?
 			// Pos reminder
 
-			MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.vanguards.radio.coordinates.1"));
-			MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.vanguards.radio.coordinates.2", Component.literal(voidbornBasePos.getX() + ", " + voidbornBasePos.getY() + ", " + voidbornBasePos.getZ()).withStyle(ChatFormatting.GOLD)));
+			MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.vanguards.radio.coordinates.1"));
+			MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.vanguards.radio.coordinates.2", Component.literal(voidbornBasePos.getX() + ", " + voidbornBasePos.getY() + ", " + voidbornBasePos.getZ()).withStyle(ChatFormatting.GOLD)));
 		}
 	}
 
@@ -182,8 +182,8 @@ public class StoryFunctions {
 			}
 		}
 
-		String baseKey = "voidvanguards.message.voidborn.initial.";
-		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("voidvanguards.voidborn.name.leader", ChatFormatting.DARK_PURPLE, true);
+		String baseKey = "collective.voidvanguards.message.voidborn.initial.";
+		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("collective.voidvanguards.voidborn.name.leader", ChatFormatting.DARK_PURPLE, true);
 
 		int totalDelay = 20;
 		int lastDelay = 0;
@@ -243,8 +243,8 @@ public class StoryFunctions {
 
 		orbitalRadioStack.shrink(1);
 
-		String baseKey = "voidvanguards.message.voidborn.givenradio.";
-		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("voidvanguards.voidborn.name.leader", ChatFormatting.DARK_PURPLE, true);
+		String baseKey = "collective.voidvanguards.message.voidborn.givenradio.";
+		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("collective.voidvanguards.voidborn.name.leader", ChatFormatting.DARK_PURPLE, true);
 
 		int totalDelay = 0;
 		for (int i = 1; i <= 3; i++) {
@@ -313,8 +313,8 @@ public class StoryFunctions {
 
 		SaveLoadUtils.removeForcedPositionTag(serverPlayer);
 
-		String baseKey = "voidvanguards.message.voidborn.attacked.";
-		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("voidvanguards.voidborn.name.leader", ChatFormatting.DARK_PURPLE, true);
+		String baseKey = "collective.voidvanguards.message.voidborn.attacked.";
+		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("collective.voidvanguards.voidborn.name.leader", ChatFormatting.DARK_PURPLE, true);
 
 		int totalDelay = 0;
 		for (int i = 1; i <= 4; i++) {
@@ -357,8 +357,8 @@ public class StoryFunctions {
 	public static void processVanguardsInVoidbornBase(ServerLevel serverLevel, ServerPlayer serverPlayer, List<LivingEntity> vanguards) {
 		MinecraftServer minecraftServer = serverLevel.getServer();
 
-		String baseKey = "voidvanguards.message.vanguards.voidbornBase.";
-		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("voidvanguards.vanguard.name.leader", ChatFormatting.DARK_RED, true);
+		String baseKey = "collective.voidvanguards.message.vanguards.voidbornBase.";
+		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("collective.voidvanguards.vanguard.name.leader", ChatFormatting.DARK_RED, true);
 
 		int totalDelay = 20;
 		for (int i = 1; i <= 6; i++) {
@@ -366,7 +366,7 @@ public class StoryFunctions {
 			String rawMessage = messageTextComponent.getString();
 			if (rawMessage.contains("%s")) {
 				if (i == 2) {
-					messageTextComponent = Component.translatable(baseKey + i, Component.translatable("voidvanguards.voidborn.name").withStyle(ChatFormatting.DARK_PURPLE));
+					messageTextComponent = Component.translatable(baseKey + i, Component.translatable("collective.voidvanguards.voidborn.name").withStyle(ChatFormatting.DARK_PURPLE));
 				}
 				else {
 					messageTextComponent = Component.translatable(baseKey + i, serverPlayer.getName());
@@ -436,9 +436,9 @@ public class StoryFunctions {
 				vanguard.addTag(Reference.MOD_ID + ".vulnerable");
 			}
 
-			String baseKey = "voidvanguards.message.voidborn.vanguardStation.";
-			MutableComponent vanguardSpeakerComponent = StoryUtil.getSpeakerComponent("voidvanguards.vanguard.name.leader", ChatFormatting.DARK_RED, true);
-			MutableComponent voidbornSpeakerComponent = StoryUtil.getSpeakerComponent("voidvanguards.voidborn.name.leader", ChatFormatting.DARK_PURPLE, true);
+			String baseKey = "collective.voidvanguards.message.voidborn.vanguardStation.";
+			MutableComponent vanguardSpeakerComponent = StoryUtil.getSpeakerComponent("collective.voidvanguards.vanguard.name.leader", ChatFormatting.DARK_RED, true);
+			MutableComponent voidbornSpeakerComponent = StoryUtil.getSpeakerComponent("collective.voidvanguards.voidborn.name.leader", ChatFormatting.DARK_PURPLE, true);
 
 			int totalDelay = 20;
 			for (int i = 1; i <= 4; i++) {
@@ -534,8 +534,8 @@ public class StoryFunctions {
 							CosmosDimensionFunctions.teleportPlayerToVoidbornBase(serverPlayer.serverLevel(), serverPlayer);
 
 							TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
-								MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.voidborn.endAsteroid.1").withStyle(ChatFormatting.DARK_GREEN), true);
-								MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.voidborn.endAsteroid.2").withStyle(ChatFormatting.DARK_GRAY));
+								MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.endAsteroid.1").withStyle(ChatFormatting.DARK_GREEN), true);
+								MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.endAsteroid.2").withStyle(ChatFormatting.DARK_GRAY));
 							}, 10);
 						}, newNewTotalDelay);
 					}, 200);
@@ -557,8 +557,8 @@ public class StoryFunctions {
 
 		SaveLoadUtils.setForcedPositionTag(serverPlayer, 4);
 
-		String baseKey = "voidvanguards.message.vanguards.voidbornBaseDestroyed.";
-		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("voidvanguards.vanguard.name.leader", ChatFormatting.DARK_RED, true);
+		String baseKey = "collective.voidvanguards.message.vanguards.voidbornBaseDestroyed.";
+		MutableComponent speakerComponent = StoryUtil.getSpeakerComponent("collective.voidvanguards.vanguard.name.leader", ChatFormatting.DARK_RED, true);
 
 		int totalDelay = 40;
 		for (int i = 1; i <= 8; i++) {
@@ -566,7 +566,7 @@ public class StoryFunctions {
 			String rawMessage = messageTextComponent.getString();
 			if (rawMessage.contains("%s")) {
 				if (i == 2) {
-					messageTextComponent = Component.translatable(baseKey + i, Component.translatable("voidvanguards.voidborn.name").withStyle(ChatFormatting.DARK_PURPLE));
+					messageTextComponent = Component.translatable(baseKey + i, Component.translatable("collective.voidvanguards.voidborn.name").withStyle(ChatFormatting.DARK_PURPLE));
 				}
 				else if (i == 8) {
 					Component lyraName = Component.literal(VanguardVariables.vanguardNames.get(0)).withStyle(ChatFormatting.DARK_RED);

@@ -104,10 +104,10 @@ public class CosmosDimensionFunctions {
 		}
 
 		if (firstWarp) {
-			MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.voidborn.cosmos_gate.enterSuccess.first").withStyle(ChatFormatting.DARK_PURPLE), true);
+			MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.cosmos_gate.enterSuccess.first").withStyle(ChatFormatting.DARK_PURPLE), true);
 		}
 		else {
-			MessageFunctions.sendMessage(serverPlayer, Component.translatable("voidvanguards.message.voidborn.cosmos_gate.enterSuccess.again").withStyle(ChatFormatting.DARK_PURPLE), true);
+			MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.cosmos_gate.enterSuccess.again").withStyle(ChatFormatting.DARK_PURPLE), true);
 		}
 
 		TaskFunctions.enqueueCollectiveServerTask(serverLevel.getServer(), () -> {

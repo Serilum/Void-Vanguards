@@ -41,7 +41,7 @@ public class ToClientSkyShipLeavesOrbitPacket {
 				return;
 			}
 
-			MessageFunctions.sendMessage(player, Component.translatable("voidvanguards.message.skyship.left_orbit").withStyle(ChatFormatting.DARK_GREEN), true);
+			MessageFunctions.sendMessage(player, Component.translatable("collective.voidvanguards.message.skyship.left_orbit").withStyle(ChatFormatting.DARK_GREEN), true);
 		}
 	}
 }

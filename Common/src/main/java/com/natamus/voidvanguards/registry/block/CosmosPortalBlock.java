@@ -54,7 +54,7 @@ public class CosmosPortalBlock extends NetherPortalBlock {
 		);
 
 		if (!nearbyMobs.isEmpty()) {
-			Util.addSendMessageTag(serverPlayer, Component.translatable("voidvanguards.message.voidborn.cosmos_gate.mobsAround").getString());
+			Util.addSendMessageTag(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.cosmos_gate.mobsAround").getString());
 			return;
 		}
 
@@ -82,7 +82,7 @@ public class CosmosPortalBlock extends NetherPortalBlock {
 				serverPlayer.getXRot()
 			);
 
-			Util.addSendMessageTag(serverPlayer, Component.translatable("voidvanguards.message.voidborn.cosmos_gate.enterUnable").getString());
+			Util.addSendMessageTag(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.cosmos_gate.enterUnable").getString());
 
 			Util.removeTag(serverPlayer, Constants.triggeredEntityInsideTag);
 		}

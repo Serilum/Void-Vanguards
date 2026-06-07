@@ -42,8 +42,8 @@ public class ToClientSkyShipEntersOrbitPacket {
 			SkyShipVariables.skyShipVisible = true;
 			SkyShipVariables.ticksLeftForMoreDetail = ConfigHandler.ticksNeededForMoreSkyShipDetail;
 
-			MessageFunctions.sendMessage(player, Component.translatable("voidvanguards.message.skyship.entered_orbit.1").withStyle(ChatFormatting.DARK_PURPLE), true);
-			MessageFunctions.sendMessage(player, Component.translatable("voidvanguards.message.skyship.entered_orbit.2").withStyle(ChatFormatting.DARK_GRAY));
+			MessageFunctions.sendMessage(player, Component.translatable("collective.voidvanguards.message.skyship.entered_orbit.1").withStyle(ChatFormatting.DARK_PURPLE), true);
+			MessageFunctions.sendMessage(player, Component.translatable("collective.voidvanguards.message.skyship.entered_orbit.2").withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 }

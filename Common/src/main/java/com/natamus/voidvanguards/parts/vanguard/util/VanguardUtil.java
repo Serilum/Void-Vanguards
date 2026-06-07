@@ -42,13 +42,13 @@ public class VanguardUtil {
 			if (vanguardsToSummon.isEmpty()) {
 				headStack = HeadData.getGeneratedHead(HeadData.HeadType.VANGUARD_LEADER);
 				vanguardVillager.addTag(VanguardConstants.vanguardLeaderTag);
-				vanguardVillager.setCustomName(Component.translatable("voidvanguards.vanguard.name.leader").withStyle(ChatFormatting.DARK_RED));
+				vanguardVillager.setCustomName(Component.translatable("collective.voidvanguards.vanguard.name.leader").withStyle(ChatFormatting.DARK_RED));
 
 				vanguardVillager.setVillagerData(vanguardVillager.getVillagerData().setType(VillagerType.SAVANNA));
 			} else {
 				headStack = HeadData.getGeneratedHead(HeadData.HeadType.VANGUARD);
 				vanguardVillager.addTag(VanguardConstants.vanguardRecruitTag);
-				vanguardVillager.setCustomName(Component.translatable("voidvanguards.vanguard.name.recruit"));
+				vanguardVillager.setCustomName(Component.translatable("collective.voidvanguards.vanguard.name.recruit"));
 
 				vanguardVillager.setVillagerData(vanguardVillager.getVillagerData().setType(VillagerType.SNOW));
 			}
