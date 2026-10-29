@@ -1,0 +1,36 @@
+modLoader="javafml"
+loaderVersion="*"
+license="All Rights Reserved"
+issueTrackerURL="https://github.com/Serilum/.issue-tracker/labels/Mod:%20Void%20Vanguards"
+logoFile="icon.png"
+
+[[mods]]
+modId="voidvanguards"
+version="2.0"
+displayName="Void Vanguards"
+displayURL="https://serilum.com/mod/void-vanguards"
+authors="Serilum"
+description='''ModJam 2025: Void Vanguards is a story-driven mod about the conflict between the Vanguard and the Voidborn.
+'''
+credits='''Thank you very much to my Membership sponsors for supporting the development of this mod:  
+
+AnyankaT, aternosorg, Cherriesaurus, Linda Jansen, MWS, Tyler Behl   
+
+If you would like to contribute too, check out https://serilum.com/donate Appreciate it! <3   
+'''
+
+[[dependencies.voidvanguards]]
+    modId="collective"
+    type="required"
+    mandatory=true
+    versionRange="[8.68,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.voidvanguards]]
+    modId="minecraft"
+    type="required"
+    mandatory=true
+    versionRange="[1.20.1]"
+    ordering="NONE"
+    side="BOTH"

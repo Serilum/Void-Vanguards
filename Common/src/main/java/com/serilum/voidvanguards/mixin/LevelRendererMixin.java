@@ -1,0 +1,45 @@
+package com.serilum.voidvanguards.mixin;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.serilum.voidvanguards.parts.skyship.functions.SkyShipRenderFunctions;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import org.joml.Matrix4f;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(value = LevelRenderer.class, priority = 1001)
+public class LevelRendererMixin {
+	@Shadow
+	private ClientLevel level;
+
+	@Inject(method = "renderSky", at = @At("TAIL"))
+	private void renderSky(PoseStack poseStack, Matrix4f matrix, float partialTicks, Camera camera, boolean b, Runnable runnable, CallbackInfo ci) {
+		// SkyShipRenderFunctions.renderOrbitingShip(matrixA);
+	}
+
+	@SuppressWarnings("DiscouragedShift")
+	@Inject(method = "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getCloudsType()Lnet/minecraft/client/CloudStatus;", shift = At.Shift.BEFORE))
+	public void renderLevel(PoseStack poseStack, float $$1, long $$2, boolean $$3, Camera $$4, GameRenderer $$5, LightTexture $$6, Matrix4f $$7, CallbackInfo ci) {
+		// SkyShipRenderFunctions.renderOrbitingShip(matrixA);
+	}
+
+	@SuppressWarnings("DiscouragedShift")
+	@Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;renderSnowAndRain(Lnet/minecraft/client/renderer/LightTexture;FDDD)V", shift = At.Shift.BEFORE))
+	private void renderShipBeforeWeather(PoseStack poseStack, float partialTicks, long nanoTime, boolean someFlag, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projMatrix, CallbackInfo ci) {
+		// SkyShipRenderFunctions.renderOrbitingShip(projMatrix);
+	}
+
+	@Inject(method = "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", args = "ldc=terrain_setup"))
+	public void renderLevel_afterFog(PoseStack poseStack, float $$1, long $$2, boolean $$3, Camera $$4, GameRenderer $$5, LightTexture $$6, Matrix4f $$7, CallbackInfo ci) {
+		this.level.getProfiler().push("orbiting_ship");
+		SkyShipRenderFunctions.renderOrbitingShip(poseStack.last().pose());
+		this.level.getProfiler().pop();
+	}
+}

@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.serilum.voidvanguards.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "EvokerMixin",
+    "ItemFrameMixin",
+    "MobMixin",
+    "NearestAttackableTargetGoalMixin",
+    "PillagerMixin",
+    "VillagerMixin",
+    "VindicatorMixin"
+  ],
+  "client": [
+    "ChatComponentMixin",
+    "GuiMixin",
+    "LevelRendererMixin"
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

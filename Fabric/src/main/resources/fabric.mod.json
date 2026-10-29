@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "voidvanguards",
+  "version": "2.0",
+
+  "name": "Void Vanguards",
+  "description": "ModJam 2025: Void Vanguards is a story-driven mod about the conflict between the Vanguard and the Voidborn.",
+  "authors": [ "Serilum" ],
+  "contact": {
+    "homepage": "https://serilum.com/mod/void-vanguards",
+    "sources": "https://github.com/Serilum/Void-Vanguards",
+    "issues": "https://github.com/Serilum/.issue-tracker/labels/Mod:%20Void%20Vanguards"
+  },
+
+  "license": "All Rights Reserved",
+  "icon": "icon.png",
+
+  "environment": "*",
+  "entrypoints": { "main": [ "com.serilum.voidvanguards.ModFabric" ], "client": [ "com.serilum.voidvanguards.ModFabricClient" ], "modmenu": [ "com.serilum.voidvanguards.fabric.config.IntegrateModMenu" ] },
+  "mixins": [
+    "voidvanguards.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.12.5",
+    "fabric": "*",
+    "minecraft": ">=1.20",
+    "java": ">=17",
+    "collective": ">=8.68"
+  },
+
+  "custom": {
+    "modmenu": {
+      "links": {
+        "❤ Patreon" : "https://link.serilum.com/patreon"
+      }
+    }
+  },
+
+  "contributors": [
+	  " ",
+	  "Thank you very much to my Membership sponsors for supporting the development of this mod!",
+	  " ",
+	  "If you would like to contribute too, check out https://serilum.com/donate",
+	  " ",
+	  "Membership sponsors:",
+	  " AnyankaT",
+	  " aternosorg",
+	  " Cherriesaurus",
+	  " Linda Jansen",
+	  " MWS",
+	  " Tyler Behl"
+  ]
+}
