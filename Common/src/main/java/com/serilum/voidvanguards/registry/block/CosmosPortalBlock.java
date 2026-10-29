@@ -8,20 +8,24 @@ import com.serilum.voidvanguards.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.PowerParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class CosmosPortalBlock extends NetherPortalBlock {
@@ -36,8 +40,8 @@ public class CosmosPortalBlock extends NetherPortalBlock {
 	}
 
 	@Override
-	protected void entityInside(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Entity entity) {
-		if (level.isClientSide) {
+	protected void entityInside(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Entity entity, @NotNull InsideBlockEffectApplier insideBlockEffectApplier, boolean isPrecise) {
+		if (level.isClientSide()) {
 			return;
 		}
 
@@ -45,12 +49,12 @@ public class CosmosPortalBlock extends NetherPortalBlock {
 			return;
 		}
 
-		if (serverPlayer.getTags().contains(Constants.triggeredEntityInsideTag)) {
+		if (serverPlayer.entityTags().contains(Constants.triggeredEntityInsideTag)) {
 			return;
 		}
 
 		List<Mob> nearbyMobs = level.getEntitiesOfClass(Mob.class, new AABB(blockPos).inflate(16.0D), mob ->
-			mob.getTags().contains(VoidbornConstants.voidbornTag)
+			mob.entityTags().contains(VoidbornConstants.voidbornTag)
 		);
 
 		if (!nearbyMobs.isEmpty()) {
@@ -58,18 +62,18 @@ public class CosmosPortalBlock extends NetherPortalBlock {
 			return;
 		}
 
-		serverPlayer.getTags().add(Constants.triggeredEntityInsideTag);
+		serverPlayer.entityTags().add(Constants.triggeredEntityInsideTag);
 
 		UUID playerUUID = serverPlayer.getUUID();
 		if (ServerSaveData.get().answeredRadioPlayerUUIDS.contains(playerUUID) && !ServerSaveData.get().sabotagedVoidbornRadarPlayerUUIDS.contains(playerUUID)) {
-			CosmosDimensionFunctions.teleportPlayerToVoidbornBase(serverPlayer.serverLevel(), serverPlayer);
+			CosmosDimensionFunctions.teleportPlayerToVoidbornBase(serverPlayer.level(), serverPlayer);
 		}
 		else {
 			Direction facing = serverPlayer.getDirection().getOpposite();
 			BlockPos targetPos = serverPlayer.blockPosition().relative(facing, 2);
 
 			// Optional: ensure safe teleport (e.g. not inside a wall)
-			while (!level.getBlockState(targetPos).isAir() && targetPos.getY() < level.getMaxBuildHeight()) {
+			while (!level.getBlockState(targetPos).isAir() && targetPos.getY() < level.getMaxY()) {
 				targetPos = targetPos.above();
 			}
 
@@ -78,8 +82,10 @@ public class CosmosPortalBlock extends NetherPortalBlock {
 				targetPos.getX() + 0.5D,
 				targetPos.getY(),
 				targetPos.getZ() + 0.5D,
+				Set.of(),
 				serverPlayer.getYRot(),
-				serverPlayer.getXRot()
+				serverPlayer.getXRot(),
+				false
 			);
 
 			Util.addSendMessageTag(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.cosmos_gate.enterUnable").getString());
@@ -89,7 +95,7 @@ public class CosmosPortalBlock extends NetherPortalBlock {
 	}
 
 	@Override
-	protected @NotNull BlockState updateShape(@NotNull BlockState blockStateA, @NotNull Direction $$1, @NotNull BlockState blockStateB, @NotNull LevelAccessor levelAccessor, @NotNull BlockPos blockPosA, @NotNull BlockPos blockPosB) {
+	protected @NotNull BlockState updateShape(@NotNull BlockState blockStateA, @NotNull LevelReader levelReader, @NotNull ScheduledTickAccess scheduledTickAccess, @NotNull BlockPos blockPosA, @NotNull Direction $$1, @NotNull BlockPos blockPosB, @NotNull BlockState blockStateB, @NotNull RandomSource randomSource) {
 		return blockStateA;
 	}
 
@@ -111,7 +117,7 @@ public class CosmosPortalBlock extends NetherPortalBlock {
 				$$10 = (double)(randomSource.nextFloat() * 2.0F * (float)$$11);
 			}
 
-			level.addParticle(ParticleTypes.DRAGON_BREATH, $$5, $$6, $$7, $$8, $$9, $$10);
+			level.addParticle(PowerParticleOption.create(ParticleTypes.DRAGON_BREATH, 1.0F), $$5, $$6, $$7, $$8, $$9, $$10);
 		}
 	}
 }

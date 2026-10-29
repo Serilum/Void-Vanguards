@@ -19,8 +19,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.monster.illager.AbstractIllager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
@@ -29,12 +29,12 @@ import java.util.Set;
 
 public class VoidLivingEntityEvents {
 	public static void onLivingEntityTick(Level level, LivingEntity livingEntity) {
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return;
 		}
 
 		if (livingEntity instanceof Villager) {
-			if (!livingEntity.getTags().contains(Reference.MOD_ID + ".vanguard")) {
+			if (!livingEntity.entityTags().contains(Reference.MOD_ID + ".vanguard")) {
 				return;
 			}
 
@@ -51,7 +51,7 @@ public class VoidLivingEntityEvents {
 			if (serverPlayer.tickCount % 10 == 0) {
 				String forcedTag = null;
 
-				for (String tag : serverPlayer.getTags()) {
+				for (String tag : serverPlayer.entityTags()) {
 					if (tag.startsWith(Constants.forcedPositionTagPrefix)) {
 						VanguardUtil.keepPlayersWithinVanguardCircle(serverPlayer, tag);
 					}
@@ -69,7 +69,7 @@ public class VoidLivingEntityEvents {
 				if (Util.isInCosmosDimension(serverPlayer)) {
 					if (CosmosDimensionUtil.playerIsInVoidbornBase(serverPlayer)) {
 						if (!ServerSaveData.get().triggeredVoidbornBaseStoryPlayerUUIDS.contains(serverPlayer.getUUID())) {
-							VoidbornFunctions.checkVoidbornLeftForStoryTrigger(serverPlayer.serverLevel(), serverPlayer);
+							VoidbornFunctions.checkVoidbornLeftForStoryTrigger(serverPlayer.level(), serverPlayer);
 						}
 					}
 				}
@@ -79,7 +79,7 @@ public class VoidLivingEntityEvents {
 
 	@SuppressWarnings("RedundantIfStatement")
 	public static boolean onEntityDamage(Level level, Entity entity, DamageSource damageSource, float damageAmount) {
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return true;
 		}
 
@@ -92,15 +92,15 @@ public class VoidLivingEntityEvents {
 			}
 		}
 		else if (entity instanceof Villager villager) {
-			if (villager.getTags().contains(VanguardConstants.vanguardTag) && !villager.getTags().contains(Reference.MOD_ID + ".vulnerable")) {
+			if (villager.entityTags().contains(VanguardConstants.vanguardTag) && !villager.entityTags().contains(Reference.MOD_ID + ".vulnerable")) {
 				return false;
 			}
 		}
 		else if (entity instanceof AbstractIllager abstractIllager) {
-			Set<String> tags = abstractIllager.getTags();
+			Set<String> tags = abstractIllager.entityTags();
 			if (tags.contains(VoidbornConstants.voidbornLeaderTag)) {
 				if (tags.contains(Reference.MOD_ID + ".vulnerable") && !tags.contains(Reference.MOD_ID + ".attacked") && sourceEntity instanceof ServerPlayer serverPlayer) {
-					StoryFunctions.processVoidbornLeaderAttacked(serverPlayer.serverLevel(), serverPlayer, (Mob)abstractIllager);
+					StoryFunctions.processVoidbornLeaderAttacked(serverPlayer.level(), serverPlayer, (Mob)abstractIllager);
 					return true;
 				}
 				else if (tags.contains(Reference.MOD_ID + ".vulnerable")) {

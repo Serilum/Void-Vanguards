@@ -33,8 +33,9 @@ public class CosmosDimensionUtil {
 	}
 
 	public static CosmosLocation getPlayerCosmosLocation(ServerPlayer serverPlayer) {
-		return (serverPlayer.getX() >= 0 && serverPlayer.getZ() >= 0)
-			? CosmosLocation.VANGUARD_STATION
-			: CosmosLocation.VOIDBORN_BASE;
+		if (serverPlayer.getX() >= 0 && serverPlayer.getZ() >= 0) {
+			return CosmosLocation.VANGUARD_STATION;
+		}
+		return CosmosLocation.VOIDBORN_BASE;
 	}
 }

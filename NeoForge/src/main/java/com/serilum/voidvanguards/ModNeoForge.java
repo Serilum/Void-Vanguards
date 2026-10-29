@@ -40,7 +40,7 @@ public class ModNeoForge {
 		NeoForge.EVENT_BUS.register(NeoForgeVoidLivingEntityEvents.class);
 		NeoForge.EVENT_BUS.register(NeoForgeVoidUtilEvents.class);
 
-		if (FMLEnvironment.dist.equals(Dist.CLIENT)) {
+		if (FMLEnvironment.getDist().equals(Dist.CLIENT)) {
 			NeoForge.EVENT_BUS.register(NeoForgeVoidClientEvents.class);
 		}
 

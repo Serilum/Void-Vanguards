@@ -6,10 +6,12 @@ import com.natamus.collective.functions.StringFunctions;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HeadData {
@@ -49,10 +51,26 @@ public class HeadData {
 		headMap = Collections.unmodifiableMap(tempMap);
 	}
 
+	private static void generateHeadDataIfMissing() {
+		if (headMap.isEmpty()) {
+			generateHeadData();
+		}
+	}
+
+	public static List<String> getHeadNames() {
+		List<String> headNames = new ArrayList<>();
+		for (HeadType type : HeadType.values()) {
+			headNames.add(type.name);
+		}
+		return headNames;
+	}
+
 	public static ItemStack getGeneratedHead(String name) {
+		generateHeadDataIfMissing();
 		return headMap.get(name).copy();
 	}
 	public static ItemStack getGeneratedHead(HeadType headType) {
+		generateHeadDataIfMissing();
 		return headType.headStack.copy();
 	}
 

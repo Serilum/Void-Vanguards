@@ -7,13 +7,13 @@ import com.serilum.voidvanguards.parts.vanguard.functions.VanguardFunctions;
 import com.serilum.voidvanguards.util.Reference;
 import com.serilum.voidvanguards.util.SaveLoadUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.UUID;
 
 public class ToServerTriggerSkyShipEventPacket {
-	public static final ResourceLocation CHANNEL = ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "to_server_trigger_sky_ship_event_packet");
+	public static final Identifier CHANNEL = Identifier.fromNamespaceAndPath(Reference.MOD_ID, "to_server_trigger_sky_ship_event_packet");
 
 	public ToServerTriggerSkyShipEventPacket() {
 	}
@@ -38,7 +38,7 @@ public class ToServerTriggerSkyShipEventPacket {
 				SaveLoadUtils.savePlayerData(serverPlayer);
 			}
 
-			VanguardFunctions.initialPostSkyShipEventTrigger(serverPlayer.serverLevel(), serverPlayer);
+			VanguardFunctions.initialPostSkyShipEventTrigger(serverPlayer.level(), serverPlayer);
 		}
 	}
 }

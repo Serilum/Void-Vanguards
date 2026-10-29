@@ -17,6 +17,7 @@ public class SkyShipVariables {
 	public static final float skyShipOrbitRadius = 15.0F;
 	public static final float skyShipOrbitSpeed = 0.001F;
 	public static final float skyShipBaseSize = 0.006F;
+	public static final float skyShipRenderDistance = 100.0F;
 	public static final float skyShipHoverAmount = 0.1F;
 	public static final float skyShipElongationFactor = 0.02F;
 	public static final float skyShipHaloSizeFactor = 0.3F;

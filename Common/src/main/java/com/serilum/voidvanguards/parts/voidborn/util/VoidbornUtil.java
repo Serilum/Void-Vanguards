@@ -20,7 +20,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -70,11 +72,11 @@ public class VoidbornUtil {
 		Item weaponItem = VoidbornUtil.getRandomVoidbornMobWeapon(voidbornMobEntityType);
 		ItemStack weaponStack = new ItemStack(weaponItem);
 
-		weaponStack.enchant(enchantmentRegistry.wrapAsHolder(enchantmentRegistry.get(Enchantments.INFINITY)), 1);
+		weaponStack.enchant(enchantmentRegistry.getOrThrow(Enchantments.INFINITY), 1);
 
 		voidbornMob.setItemSlot(EquipmentSlot.MAINHAND, weaponStack);
 
-		voidbornMob.getTags().add(VoidbornConstants.voidbornTag);
+		voidbornMob.entityTags().add(VoidbornConstants.voidbornTag);
 
 		voidbornMob.setPersistenceRequired();
 		voidbornMob.setCanPickUpLoot(false);
@@ -83,9 +85,9 @@ public class VoidbornUtil {
 	}
 
 	public static Mob getVoidbornLeader(ServerLevel serverLevel, BlockPos blockPos) {
-		EntityType<?> leaderVoidbornType = EntityType.EVOKER;
+		EntityType<?> leaderVoidbornType = EntityTypes.EVOKER;
 
-		Mob voidbornLeader = VoidbornUtil.getVoidbornMob(serverLevel, blockPos, serverLevel.registryAccess().registryOrThrow(Registries.ENCHANTMENT), true, leaderVoidbornType, (Mob)leaderVoidbornType.create(serverLevel));
+		Mob voidbornLeader = VoidbornUtil.getVoidbornMob(serverLevel, blockPos, serverLevel.registryAccess().lookupOrThrow(Registries.ENCHANTMENT), true, leaderVoidbornType, (Mob)leaderVoidbornType.create(serverLevel, EntitySpawnReason.EVENT));
 
 		voidbornLeader.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
 		voidbornLeader.addTag(VoidbornConstants.voidbornLeaderTag);
@@ -107,7 +109,7 @@ public class VoidbornUtil {
 			serverLevel.getRandom().nextInt(VoidbornConstants.possibleEnemyMobVariants.size())
 		);
 
-		return Pair.of(randomType, (Mob)randomType.create(serverLevel));
+		return Pair.of(randomType, (Mob)randomType.create(serverLevel, EntitySpawnReason.EVENT));
 	}
 
 	public static Item getRandomVoidbornMobWeapon(EntityType<?> entityType) {
@@ -130,8 +132,8 @@ public class VoidbornUtil {
 
 			int slotIndex = 0;
 
-			Holder<Enchantment> protectionEnchantmentHolder = enchantmentRegistry.wrapAsHolder(enchantmentRegistry.get(Enchantments.PROTECTION));
-			Holder<Enchantment> sharpnessEnchantmentHolder = enchantmentRegistry.wrapAsHolder(enchantmentRegistry.get(Enchantments.SHARPNESS));
+			Holder<Enchantment> protectionEnchantmentHolder = enchantmentRegistry.getOrThrow(Enchantments.PROTECTION);
+			Holder<Enchantment> sharpnessEnchantmentHolder = enchantmentRegistry.getOrThrow(Enchantments.SHARPNESS);
 
 			Item[] armorItems = {
 				Items.IRON_HELMET,
@@ -171,7 +173,7 @@ public class VoidbornUtil {
 				Items.COOKED_BEEF
 			};
 
-			RandomSource random = serverLevel.random;
+			RandomSource random = serverLevel.getRandom();
 
 			while (slotIndex < chestSlotRange.size()) {
 				Item randomFood = foodItems[random.nextInt(foodItems.length)];
@@ -214,18 +216,18 @@ public class VoidbornUtil {
 		return Arrays.asList(middlePos.offset(0, 1, 0), middlePos.offset(-1, 0, -1), middlePos.offset(-1, 0, 1), middlePos.offset(1, 0, -1), middlePos.offset(1, 0, 1));
 	}
 	public static void spawnLightningAtRadarEndRods(ServerPlayer serverPlayer) {
-		MinecraftServer minecraftServer = serverPlayer.getServer();
+		MinecraftServer minecraftServer = serverPlayer.level().getServer();
 
 		for (int delay = 0; delay <= 50; delay+=10) {
 			TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
 				for (BlockPos endRodPos : getRadarEndRodPositions(serverPlayer)) {
-					Util.spawnLightning(serverPlayer.serverLevel(), endRodPos, serverPlayer);
+					Util.spawnLightning(serverPlayer.level(), endRodPos, serverPlayer);
 				}
 			}, delay);
 		}
 	}
 
 	public static boolean shouldMakeAmbientSound(Level level) {
-		return level.random.nextInt(5) == 0;
+		return level.getRandom().nextInt(5) == 0;
 	}
 }

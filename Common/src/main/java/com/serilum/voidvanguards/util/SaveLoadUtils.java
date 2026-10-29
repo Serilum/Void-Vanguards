@@ -8,10 +8,9 @@ import com.serilum.voidvanguards.data.ServerSaveData;
 import com.serilum.voidvanguards.networking.packets.ToClientSyncSaveDataPacket;
 import com.serilum.voidvanguards.parts.skyship.data.SkyShipVariables;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +40,7 @@ public class SaveLoadUtils {
 
 		String saveDataTag = "";
 
-		Set<String> tags = player.getTags();
+		Set<String> tags = player.entityTags();
 		for (String tag : tags) {
 			if (tag.startsWith(Constants.saveDataTagPrefix)) {
 				saveDataTag = tag;
@@ -67,8 +66,7 @@ public class SaveLoadUtils {
 	public static void serverSyncPlayerData(ServerPlayer serverPlayer, String saveDataTag) {
 		UUID playerUUID = serverPlayer.getUUID();
 
-		ServerLevel serverLevel = serverPlayer.serverLevel();
-		Registry<Level> levelRegistry = serverLevel.registryAccess().registryOrThrow(Registries.DIMENSION);
+		ServerLevel serverLevel = serverPlayer.level();
 
 		int x, y, z;
 		for (String saveData : saveDataTag.split(Constants.saveDataTagMainDelimiter)) {
@@ -194,7 +192,7 @@ public class SaveLoadUtils {
 					String rawOriginalLevelResourceKey = rawOriginalPosition[0];
 					String[] rawOriginalCoordinates = rawOriginalPosition[1].split("_");
 
-					ResourceLocation originalLevelResourceLocation = ResourceLocation.parse(rawOriginalLevelResourceKey.replace("+", ":"));
+					Identifier originalLevelResourceLocation = Identifier.parse(rawOriginalLevelResourceKey.replace("+", ":"));
 					ResourceKey<Level> originalLevelResourceKey = ResourceKey.create(Registries.DIMENSION, originalLevelResourceLocation);
 
 					Level originalLevel = serverLevel.getServer().getLevel(originalLevelResourceKey);
@@ -220,7 +218,7 @@ public class SaveLoadUtils {
 					String rawVoidbornBaseLevelResourceKey = rawVoidbornBasePosition[0];
 					String[] rawVoidbornBaseCoordinates = rawVoidbornBasePosition[1].split("_");
 
-					ResourceLocation voidbornBaseLevelResourceLocation = ResourceLocation.parse(rawVoidbornBaseLevelResourceKey.replace("+", ":"));
+					Identifier voidbornBaseLevelResourceLocation = Identifier.parse(rawVoidbornBaseLevelResourceKey.replace("+", ":"));
 					ResourceKey<Level> voidbornBaseLevelResourceKey = ResourceKey.create(Registries.DIMENSION, voidbornBaseLevelResourceLocation);
 
 					Level voidbornBaseLevel = serverLevel.getServer().getLevel(voidbornBaseLevelResourceKey);
@@ -288,14 +286,14 @@ public class SaveLoadUtils {
 		if (originalPositionPair != null) {
 			BlockPos originalPositionPos = originalPositionPair.getSecond();
 
-			dataTag += Constants.saveDataTagMainDelimiter + "originalPlayerPosition" + Constants.saveDataTagSubDelimiter + originalPositionPair.getFirst().location().toString().replace(":", "+") + "__" + originalPositionPos.getX() + "_" + originalPositionPos.getY() + "_" + originalPositionPos.getZ();
+			dataTag += Constants.saveDataTagMainDelimiter + "originalPlayerPosition" + Constants.saveDataTagSubDelimiter + originalPositionPair.getFirst().identifier().toString().replace(":", "+") + "__" + originalPositionPos.getX() + "_" + originalPositionPos.getY() + "_" + originalPositionPos.getZ();
 		}
 
 		Pair<ResourceKey<Level>, BlockPos> voidbornCosmosGateCoordinatePair = ServerSaveData.get().voidbornCosmosGatePositionPlayerUUIDS.get(playerUUID);
 		if (voidbornCosmosGateCoordinatePair != null) {
 			BlockPos voidbornCosmosGateCoordinatePos = voidbornCosmosGateCoordinatePair.getSecond();
 
-			dataTag += Constants.saveDataTagMainDelimiter + "enemyCosmosGatePosition" + Constants.saveDataTagSubDelimiter + voidbornCosmosGateCoordinatePair.getFirst().location().toString().replace(":", "+") + "__" + voidbornCosmosGateCoordinatePos.getX() + "_" + voidbornCosmosGateCoordinatePos.getY() + "_" + voidbornCosmosGateCoordinatePos.getZ();
+			dataTag += Constants.saveDataTagMainDelimiter + "enemyCosmosGatePosition" + Constants.saveDataTagSubDelimiter + voidbornCosmosGateCoordinatePair.getFirst().identifier().toString().replace(":", "+") + "__" + voidbornCosmosGateCoordinatePos.getX() + "_" + voidbornCosmosGateCoordinatePos.getY() + "_" + voidbornCosmosGateCoordinatePos.getZ();
 		}
 
 		return dataTag;
@@ -304,7 +302,7 @@ public class SaveLoadUtils {
 	public static void removeOldSaveTag(Player player) {
 		List<String> tagsToRemove = new ArrayList<>();
 
-		Set<String> tags = player.getTags();
+		Set<String> tags = player.entityTags();
 		for (String tag : tags) {
 			if (tag.startsWith(Constants.saveDataTagPrefix)) {
 				tagsToRemove.add(tag);
@@ -312,7 +310,7 @@ public class SaveLoadUtils {
 		}
 
 		for (String tag : tagsToRemove) {
-			player.getTags().remove(tag);
+			player.entityTags().remove(tag);
 		}
 	}
 
@@ -340,12 +338,12 @@ public class SaveLoadUtils {
 		String forcedPositionTag = Constants.forcedPositionTagPrefix + Constants.saveDataTagMainDelimiter + "forcedPlayerPosition" + Constants.saveDataTagSubDelimiter + middlePos.getX() + "_" + middlePos.getY() + "_" + middlePos.getZ() + Constants.saveDataTagMainDelimiter + "radius" + Constants.saveDataTagSubDelimiter + maxRadius;
 
 		removeForcedPositionTag(serverPlayer);
-		serverPlayer.getTags().add(forcedPositionTag);
+		serverPlayer.entityTags().add(forcedPositionTag);
 	}
 	public static void removeForcedPositionTag(ServerPlayer serverPlayer) {
 		List<String> tagsToRemove = new ArrayList<>();
 
-		Set<String> tags = serverPlayer.getTags();
+		Set<String> tags = serverPlayer.entityTags();
 		for (String tag : tags) {
 			if (tag.startsWith(Constants.forcedPositionTagPrefix)) {
 				tagsToRemove.add(tag);
@@ -353,7 +351,7 @@ public class SaveLoadUtils {
 		}
 
 		for (String tag : tagsToRemove) {
-			serverPlayer.getTags().remove(tag);
+			serverPlayer.entityTags().remove(tag);
 		}
 	}
 }

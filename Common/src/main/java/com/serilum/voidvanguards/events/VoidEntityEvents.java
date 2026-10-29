@@ -35,7 +35,7 @@ public class VoidEntityEvents {
 	}
 
 	public static void onPlayerLogin(Level level, Player player) {
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return;
 		}
 
@@ -58,7 +58,7 @@ public class VoidEntityEvents {
 	}
 
 	public static void onItemPickup(Level level, Player player, ItemStack itemStack) {
-		if (level.isClientSide) {
+		if (level.isClientSide()) {
 			return;
 		}
 
@@ -91,7 +91,7 @@ public class VoidEntityEvents {
 			return InteractionResult.PASS;
 		}
 
-		Set<String> targetTags = target.getTags();
+		Set<String> targetTags = target.entityTags();
 		if (!(targetTags.contains(VoidbornConstants.voidbornLeaderTag))) {
 			return InteractionResult.PASS;
 		}

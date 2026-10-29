@@ -108,7 +108,7 @@ public class VoidBlockEvents {
 				return InteractionResult.FAIL;
 			}
 
-			VoidbornFunctions.voidbornRadarLeverWasTriggered(serverPlayer.serverLevel(), serverPlayer);
+			VoidbornFunctions.voidbornRadarLeverWasTriggered(serverPlayer.level(), serverPlayer);
 		}
 
 		return InteractionResult.PASS;

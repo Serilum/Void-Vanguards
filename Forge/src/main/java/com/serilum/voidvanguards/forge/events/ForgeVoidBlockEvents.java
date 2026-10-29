@@ -8,42 +8,43 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+
+import java.lang.invoke.MethodHandles;
 
 public class ForgeVoidBlockEvents {
-	@SubscribeEvent
-	public static void onBlockBreak(BlockEvent.BreakEvent e) {
-		Level level = WorldFunctions.getWorldIfInstanceOfAndNotRemote(e.getLevel());
-		if (level == null) {
-			return;
-		}
-
-		if (!VoidBlockEvents.onBlockBreak(level, e.getPlayer(), e.getPos(), e.getState(), null)) {
-			e.setCanceled(true);
-		}
+	public static void registerEventsInBus() {
+		BusGroup.DEFAULT.register(MethodHandles.lookup(), ForgeVoidBlockEvents.class);
 	}
 
 	@SubscribeEvent
-	public static void onBlockPlace(BlockEvent.EntityPlaceEvent e) {
+	public static boolean onBlockBreak(BlockEvent.BreakEvent e) {
 		Level level = WorldFunctions.getWorldIfInstanceOfAndNotRemote(e.getLevel());
 		if (level == null) {
-			return;
+			return false;
+		}
+
+		return !VoidBlockEvents.onBlockBreak(level, e.getPlayer(), e.getPos(), e.getState(), null);
+	}
+
+	@SubscribeEvent
+	public static boolean onBlockPlace(BlockEvent.EntityPlaceEvent e) {
+		Level level = WorldFunctions.getWorldIfInstanceOfAndNotRemote(e.getLevel());
+		if (level == null) {
+			return false;
 		}
 
 		Entity entity = e.getEntity();
 		if (!(entity instanceof LivingEntity)) {
-			return;
+			return false;
 		}
 
-		if (!VoidBlockEvents.onBlockPlace(level, e.getPos(), e.getPlacedBlock(), (LivingEntity)entity, null)) {
-			e.setCanceled(true);
-		}
+		return !VoidBlockEvents.onBlockPlace(level, e.getPos(), e.getPlacedBlock(), (LivingEntity)entity, null);
 	}
 
 	@SubscribeEvent
-	public static void onAnvilClick(PlayerInteractEvent.RightClickBlock e) {
-		if (VoidBlockEvents.onRightClickBlock(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec()).equals(InteractionResult.SUCCESS)) {
-			e.setCanceled(true);
-		}
+	public static boolean onAnvilClick(PlayerInteractEvent.RightClickBlock e) {
+		return !VoidBlockEvents.onRightClickBlock(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec()).equals(InteractionResult.PASS);
 	}
 }

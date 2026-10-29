@@ -6,11 +6,11 @@
 		"IAI"
 	],
 	"key": {
-		"P": { "item": "minecraft:prismarine_crystals" },
-		"I": { "item": "minecraft:iron_ingot" },
-		"R": { "item": "minecraft:redstone" },
-		"E": { "item": "minecraft:ender_eye" },
-		"A": { "item": "minecraft:amethyst_shard" }
+		"P": "minecraft:prismarine_crystals",
+		"I": "minecraft:iron_ingot",
+		"R": "minecraft:redstone",
+		"E": "minecraft:ender_eye",
+		"A": "minecraft:amethyst_shard"
 	},
 	"result": {
 		"id": "voidvanguards:orbital_transponder",

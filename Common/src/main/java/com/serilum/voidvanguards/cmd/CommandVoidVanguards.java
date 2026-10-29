@@ -8,10 +8,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.natamus.collective.functions.MessageFunctions;
 import com.natamus.collective.functions.StringFunctions;
+import com.natamus.collective.implementations.networking.api.Dispatcher;
 import com.serilum.voidvanguards.data.HeadData;
 import com.serilum.voidvanguards.data.ServerSaveData;
+import com.serilum.voidvanguards.networking.packets.ToClientResetSkyShipPacket;
 import com.serilum.voidvanguards.parts.cosmos.functions.CosmosDimensionFunctions;
-import com.serilum.voidvanguards.parts.skyship.functions.SkyShipFunctions;
 import com.serilum.voidvanguards.parts.vanguard.functions.VanguardFunctions;
 import com.serilum.voidvanguards.parts.voidborn.functions.VoidbornFunctions;
 import com.serilum.voidvanguards.util.Reference;
@@ -22,25 +23,32 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class CommandVoidVanguards {
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal(Reference.MOD_ID).requires((iCommandSender) -> { return iCommandSender.hasPermission(2); })
+		dispatcher.register(Commands.literal(Reference.MOD_ID).requires((iCommandSender) -> { return iCommandSender.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER); })
 			.then(Commands.literal("reset")
 			.executes((command) -> {
 				CommandSourceStack source = command.getSource();
 
-				SkyShipFunctions.resetSkyShipVariables(true);
+				ServerPlayer serverPlayer;
+				try {
+					serverPlayer = source.getPlayerOrException();
+				}
+				catch (CommandSyntaxException ex) {
+					MessageFunctions.sendTranslatableMessage(source, "collective.shared.message.playeronly", ChatFormatting.RED);
+					return 1;
+				}
 
-				MessageFunctions.sendMessage(source, Component.translatable("collective.voidvanguards.message.skyship.reset").withStyle(ChatFormatting.DARK_GREEN));
-
+				Dispatcher.sendToClient(new ToClientResetSkyShipPacket(), serverPlayer);
 				return 1;
 			}))
 
@@ -86,7 +94,7 @@ public class CommandVoidVanguards {
 
 				ServerPlayer serverPlayer = source.getPlayer();
 
-				VoidbornFunctions.generateVoidbornCosmosGate(serverPlayer.serverLevel(), serverPlayer, serverPlayer.blockPosition().offset(5, 0, 5));
+				VoidbornFunctions.generateVoidbornCosmosGate(serverPlayer.level(), serverPlayer, serverPlayer.blockPosition().offset(5, 0, 5));
 
 				MessageFunctions.sendTranslatableMessage(serverPlayer, "collective.voidvanguards.message.generatedcosmosgate", ChatFormatting.DARK_GREEN);
 				return 1;
@@ -99,7 +107,7 @@ public class CommandVoidVanguards {
 
 				ServerPlayer serverPlayer = source.getPlayer();
 
-				CosmosDimensionFunctions.teleportPlayerToVoidbornBase(serverPlayer.serverLevel(), serverPlayer);
+				CosmosDimensionFunctions.teleportPlayerToVoidbornBase(serverPlayer.level(), serverPlayer);
 
 				MessageFunctions.sendTranslatableMessage(serverPlayer, "collective.voidvanguards.message.teleportedvoidbornbase", ChatFormatting.DARK_GREEN);
 				return 1;
@@ -111,7 +119,7 @@ public class CommandVoidVanguards {
 				CommandSourceStack source = command.getSource();
 
 				ServerPlayer serverPlayer = source.getPlayer();
-				for (String tag : serverPlayer.getTags()) {
+				for (String tag : serverPlayer.entityTags()) {
 					if (tag.toLowerCase().startsWith(Reference.MOD_ID)) {
 						Util.removeTag(serverPlayer, tag);
 					}
@@ -129,7 +137,7 @@ public class CommandVoidVanguards {
 				MessageFunctions.sendTranslatableMessage(source, "collective.voidvanguards.message.generatefollowingheads", ChatFormatting.DARK_GREEN);
 				MessageFunctions.sendTranslatableMessage(source, " ", "collective.voidvanguards.message.usageheadname", ChatFormatting.DARK_GREEN, Reference.MOD_ID);
 
-				List<String> headNames = new ArrayList<>(HeadData.headMap.keySet());
+				List<String> headNames = HeadData.getHeadNames();
 				Collections.sort(headNames);
 				String mnstr = String.join(", ", headNames);
 				MessageFunctions.sendMessage(source, mnstr, ChatFormatting.YELLOW);
@@ -154,7 +162,7 @@ public class CommandVoidVanguards {
 		CommandSourceStack source = command.getSource();
 		String headName = StringArgumentType.getString(command, "head-name").toLowerCase();
 
-		if (!HeadData.headMap.containsKey(headName)) {
+		if (!HeadData.getHeadNames().contains(headName)) {
 			MessageFunctions.sendTranslatableMessage(source, "collective.voidvanguards.message.headnameexistget", ChatFormatting.RED, headName);
 			MessageFunctions.sendTranslatableMessage(source, " ", "collective.voidvanguards.message.usageheadlist", ChatFormatting.RED, Reference.MOD_ID);
 			return 1;
@@ -169,10 +177,10 @@ public class CommandVoidVanguards {
 			return 1;
 		}
 
-		ItemStack headstack = HeadData.headMap.get(headName).copy();
+		ItemStack headstack = HeadData.getGeneratedHead(headName);
 		headstack.setCount(amount);
 		if (!player.getInventory().add(headstack)) {
-			player.drop(headstack, false);
+			player.drop(headstack, false, Prediction.PREDICTED);
 		}
 
 		String s = "";
@@ -185,7 +193,7 @@ public class CommandVoidVanguards {
 	}
 
 	public static final SuggestionProvider<CommandSourceStack> headStackSuggestions = (context, builder) -> SharedSuggestionProvider.suggest(
-		HeadData.headMap.keySet(), builder,
+		HeadData.getHeadNames(), builder,
 		value -> value,
 		value -> Component.literal(value)
 	);

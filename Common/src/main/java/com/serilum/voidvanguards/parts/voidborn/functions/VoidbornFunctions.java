@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
+import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -62,7 +63,7 @@ public class VoidbornFunctions {
 			}
 
 			TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
-				Registry<Enchantment> enchantmentRegistry = overworldLevel.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+				Registry<Enchantment> enchantmentRegistry = overworldLevel.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
 				for (BlockPos blockEntityPos : parsedSchematicObject.blockEntityPositions) {
 					BlockEntity blockEntity = overworldLevel.getBlockEntity(blockEntityPos);
@@ -114,7 +115,7 @@ public class VoidbornFunctions {
 			cosmosLevel.setBlock(teleportBackButtonPos, Blocks.WARPED_BUTTON.defaultBlockState().setValue(ButtonBlock.FACING, Direction.WEST), 3);
 
 			TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
-				Registry<Enchantment> enchantmentRegistry = cosmosLevel.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+				Registry<Enchantment> enchantmentRegistry = cosmosLevel.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 				for (BlockPos entityBlockPos : parsedSchematicObject.blockEntityPositions) {
 					if (cosmosLevel.getBlockState(entityBlockPos).getBlock().equals(Blocks.CRIMSON_SIGN)) {
 						VoidbornUtil.replaceSignWithVoidbornMob(cosmosLevel, entityBlockPos, enchantmentRegistry);
@@ -165,13 +166,13 @@ public class VoidbornFunctions {
 
 			serverLevel.setBlockAndUpdate(signPos, Blocks.WARPED_WALL_SIGN.defaultBlockState().setValue(WallSignBlock.FACING, Direction.WEST));
 			if (serverLevel.getBlockEntity(signPos) instanceof SignBlockEntity signBlockEntity) {
-				SignText signText = signBlockEntity.getFrontText();
-				signText = signText.setMessage(0, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.0").withStyle(ChatFormatting.WHITE));
-				signText = signText.setMessage(1, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.1").withStyle(ChatFormatting.WHITE));
-				signText = signText.setMessage(2, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.2").withStyle(ChatFormatting.WHITE));
-				signText = signText.setMessage(3, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.3").withStyle(ChatFormatting.WHITE));
+				SignText.Mutable signText = signBlockEntity.getText(SignTextSlot.FRONT).asMutable();
+				signText.setLine(0, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.0").withStyle(ChatFormatting.WHITE));
+				signText.setLine(1, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.1").withStyle(ChatFormatting.WHITE));
+				signText.setLine(2, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.2").withStyle(ChatFormatting.WHITE));
+				signText.setLine(3, Component.translatable("collective.voidvanguards.message.voidborn.base.radarSign.text.3").withStyle(ChatFormatting.WHITE));
 
-				signBlockEntity.setText(signText, true);
+				signBlockEntity.setText(signText.asImmutable(), SignTextSlot.FRONT);
 
 				TileEntityFunctions.updateTileEntity(serverLevel, signPos, signBlockEntity);
 			}
@@ -215,7 +216,7 @@ public class VoidbornFunctions {
 		List<Mob> nearbyEntities = cosmosLevel.getEntitiesOfClass(
 			Mob.class,
 			serverPlayer.getBoundingBox().inflate(120.0D),
-			e -> e.getTags().contains(VoidbornConstants.voidbornTag)
+			e -> e.entityTags().contains(VoidbornConstants.voidbornTag)
 		);
 
 		int voidbornCount = nearbyEntities.size();
