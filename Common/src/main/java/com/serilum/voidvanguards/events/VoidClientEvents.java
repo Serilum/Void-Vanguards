@@ -1,20 +1,26 @@
 package com.serilum.voidvanguards.events;
 
+import com.natamus.collective.functions.MessageFunctions;
+import com.serilum.voidvanguards.config.ConfigHandler;
 import com.serilum.voidvanguards.data.ClientConstants;
 import com.serilum.voidvanguards.data.ClientVariables;
 import com.serilum.voidvanguards.parts.skyship.data.SkyShipVariables;
 import com.serilum.voidvanguards.parts.skyship.functions.SkyShipFunctions;
+import com.serilum.voidvanguards.parts.skyship.util.SkyShipUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 
 public class VoidClientEvents {
 	public static void onClientTick() {
 		if (ClientConstants.mc.player == null || ClientConstants.mc.level == null) {
 			return;
 		}
+
+		SkyShipUtil.trackDayTime(ClientConstants.mc);
 
 		if (SkyShipVariables.skyShipVisible) {
 			if (SkyShipFunctions.isLookingAtSkyShip()) {
@@ -63,5 +69,50 @@ public class VoidClientEvents {
 
 	public static void onClientLogout() {
 		SkyShipFunctions.resetSkyShipVariables(false);
+	}
+
+	public static void onSkyShipEntersOrbit() {
+		Player player = ClientConstants.mc.player;
+		if (player == null) {
+			return;
+		}
+
+		if (SkyShipVariables.triggeredSkyShipEvent || SkyShipVariables.skyShipVisible) {
+			return;
+		}
+
+		SkyShipVariables.skyShipVisible = true;
+		SkyShipVariables.ticksLeftForMoreDetail = ConfigHandler.ticksNeededForMoreSkyShipDetail;
+
+		MessageFunctions.sendClientMessage(player, Component.literal(""));
+		MessageFunctions.sendClientMessage(player, Component.translatable("collective.voidvanguards.message.skyship.entered_orbit.1").withStyle(ChatFormatting.DARK_PURPLE));
+		MessageFunctions.sendClientMessage(player, Component.translatable("collective.voidvanguards.message.skyship.entered_orbit.2").withStyle(ChatFormatting.DARK_GRAY));
+	}
+
+	public static void onSkyShipLeavesOrbit() {
+		if (SkyShipVariables.triggeredSkyShipEvent || !SkyShipVariables.skyShipVisible) {
+			return;
+		}
+
+		SkyShipFunctions.resetSkyShipVariables(false);
+
+		Player player = ClientConstants.mc.player;
+		if (player == null) {
+			return;
+		}
+
+		MessageFunctions.sendClientMessage(player, Component.literal(""));
+		MessageFunctions.sendClientMessage(player, Component.translatable("collective.voidvanguards.message.skyship.left_orbit").withStyle(ChatFormatting.DARK_GREEN));
+	}
+
+	public static void onResetSkyShip() {
+		SkyShipFunctions.resetSkyShipVariables(true);
+
+		Player player = ClientConstants.mc.player;
+		if (player == null) {
+			return;
+		}
+
+		MessageFunctions.sendClientMessage(player, Component.translatable("collective.voidvanguards.message.skyship.reset").withStyle(ChatFormatting.DARK_GREEN));
 	}
 }

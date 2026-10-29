@@ -36,9 +36,10 @@ public class LevelRendererMixin {
 		// SkyShipRenderFunctions.renderOrbitingShip(projMatrix);
 	}
 
-	@Inject(method = "renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FogRenderer;setupFog(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/FogRenderer$FogMode;FZF)V"))
+	@Inject(method = "renderLevel(Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", args = "ldc=terrain_setup"))
 	public void renderLevel_afterFog(DeltaTracker $$0, boolean $$1, Camera $$2, GameRenderer $$3, LightTexture $$4, Matrix4f matrixA, Matrix4f $$6, CallbackInfo ci) {
 		this.level.getProfiler().push("orbiting_ship");
 		SkyShipRenderFunctions.renderOrbitingShip(matrixA);
+		this.level.getProfiler().pop();
 	}
 }

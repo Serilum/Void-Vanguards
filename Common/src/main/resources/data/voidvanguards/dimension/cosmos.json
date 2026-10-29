@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:the_end",
+  "type": "voidvanguards:cosmos",
   "generator": {
     "type": "minecraft:flat",
     "settings": {

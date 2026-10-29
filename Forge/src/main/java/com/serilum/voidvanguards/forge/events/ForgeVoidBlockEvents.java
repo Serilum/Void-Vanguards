@@ -42,7 +42,7 @@ public class ForgeVoidBlockEvents {
 
 	@SubscribeEvent
 	public static void onAnvilClick(PlayerInteractEvent.RightClickBlock e) {
-		if (VoidBlockEvents.onRightClickBlock(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec()).equals(InteractionResult.SUCCESS)) {
+		if (!VoidBlockEvents.onRightClickBlock(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec()).equals(InteractionResult.PASS)) {
 			e.setCanceled(true);
 		}
 	}

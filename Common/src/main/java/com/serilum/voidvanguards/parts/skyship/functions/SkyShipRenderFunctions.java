@@ -24,7 +24,8 @@ public class SkyShipRenderFunctions {
 		}
 
 		long time = ClientConstants.mc.level.getGameTime();
-		float partialTicks = ClientConstants.mc.getFrameTimeNs();
+		float partialTicks = ClientConstants.mc.getTimer().getGameTimeDeltaPartialTick(false);
+		double animationTime = SkyShipUtil.getAnimationTime(ClientConstants.mc, partialTicks);
 
 		float sunAngle = SkyShipUtil.getShipSunAngle(ClientConstants.mc, partialTicks);
 
@@ -34,7 +35,7 @@ public class SkyShipRenderFunctions {
 				0.0F
 		).normalize();
 
-		float orbitAngle = time * SkyShipVariables.skyShipOrbitSpeed;
+		double orbitAngle = animationTime * SkyShipVariables.skyShipOrbitSpeed;
 
 		Vector3f offset = new Vector3f(
 				(float) Math.cos(orbitAngle) * SkyShipVariables.skyShipOrbitRadius,
@@ -72,7 +73,7 @@ public class SkyShipRenderFunctions {
 					explosionFrame = 9; // Final explosion frame
 				}
 
-				renderExplosionFrame(matrix, time, skyShipPos, offset, explosionFrame);
+				renderExplosionFrame(matrix, animationTime, skyShipPos, offset, explosionFrame);
 				return;
 			} else {
 				// Explosion finished
@@ -82,10 +83,10 @@ public class SkyShipRenderFunctions {
 			}
 		}
 
-		renderNormalShip(matrix, time, skyShipPos, offset);
+		renderNormalShip(matrix, animationTime, skyShipPos, offset);
 	}
 
-	private static void renderNormalShip(Matrix4f matrix, long time, Vector3f skyShipPos, Vector3f offset) {
+	private static void renderNormalShip(Matrix4f matrix, double time, Vector3f skyShipPos, Vector3f offset) {
 		float flicker = 1.0F - SkyShipVariables.skyShipFlickerSizeAmount + SkyShipVariables.skyShipFlickerSizeAmount * (float) Math.sin(time * SkyShipVariables.skyShipFlickerSpeed);
 
 		// Get current ship detail level
@@ -100,7 +101,7 @@ public class SkyShipRenderFunctions {
 
 		// SIMPLE FIX: Use the same base size for all levels, but divide by pixel dimensions
 		// This ensures more pixels = smaller individual pixels = same overall ship size
-		float basePixelSize = SkyShipVariables.skyShipBaseSize * flicker;
+		float basePixelSize = SkyShipVariables.skyShipBaseSize * flicker * SkyShipVariables.skyShipRenderDistance;
 		float pixelWidth = basePixelSize / (cols / 3.0f);  // Normalize to level 0 width (3 pixels)
 		float pixelHeight = basePixelSize / (rows / 8.0f); // Normalize to level 0 height (8 pixels)
 
@@ -108,19 +109,14 @@ public class SkyShipRenderFunctions {
 		Vector3f elong = new Vector3f(offset).normalize().mul(SkyShipVariables.skyShipElongationFactor * flicker);
 		skyShipPos.add(elong);
 
-		Quaternionf faceCamera = new Quaternionf().rotateTo(new Vector3f(0, 0, -1), skyShipPos.normalize());
+		Vector3f skyShipDirection = new Vector3f(skyShipPos).normalize();
+		skyShipPos.set(skyShipDirection).mul(SkyShipVariables.skyShipRenderDistance);
+
+		Quaternionf faceCamera = new Quaternionf().rotateTo(new Vector3f(0, 0, -1), skyShipDirection);
 
 		// Render skyship
-		boolean depthTestEnabled = GL11.glIsEnabled(GL11.GL_DEPTH_TEST);
 		boolean depthMaskEnabled = GL11.glGetBoolean(GL11.GL_DEPTH_WRITEMASK);
-
-		if (!depthTestEnabled) {
-			// RenderSystem.enableDepthTest();
-		}
-		if (!depthMaskEnabled) {
-			RenderSystem.depthMask(true);
-		}
-		// RenderSystem.depthFunc(GL11.GL_LEQUAL);
+		RenderSystem.depthMask(false);
 
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
@@ -176,18 +172,12 @@ public class SkyShipRenderFunctions {
 		//
 
 		RenderSystem.disableBlend();
-
-		if (!depthTestEnabled) {
-			// RenderSystem.disableDepthTest();
-		}
-		if (!depthMaskEnabled) {
-			RenderSystem.depthMask(false);
-		}
+		RenderSystem.depthMask(depthMaskEnabled);
 	}
 
-	private static void renderExplosionFrame(Matrix4f matrix, long time, Vector3f skyShipPos, Vector3f offset, int explosionFrame) {
+	private static void renderExplosionFrame(Matrix4f matrix, double time, Vector3f skyShipPos, Vector3f offset, int explosionFrame) {
 		// Use larger base size for explosion
-		float basePixelSize = SkyShipVariables.skyShipBaseSize * 1.5f;
+		float basePixelSize = SkyShipVariables.skyShipBaseSize * 1.5f * SkyShipVariables.skyShipRenderDistance;
 
 		// Get explosion pattern and colors
 		int[][] explosionPattern = SkyShipPatterns.EXPLOSION_PATTERNS[explosionFrame - 6]; // Convert to 0-based index
@@ -203,19 +193,14 @@ public class SkyShipRenderFunctions {
 		skyShipPos.y += (float) Math.sin(time * 0.3) * 2.0f;
 		skyShipPos.x += (float) Math.cos(time * 0.2) * 1.5f;
 
-		Quaternionf faceCamera = new Quaternionf().rotateTo(new Vector3f(0, 0, -1), skyShipPos.normalize());
+		Vector3f skyShipDirection = new Vector3f(skyShipPos).normalize();
+		skyShipPos.set(skyShipDirection).mul(SkyShipVariables.skyShipRenderDistance);
+
+		Quaternionf faceCamera = new Quaternionf().rotateTo(new Vector3f(0, 0, -1), skyShipDirection);
 
 		// Render explosion
-		boolean depthTestEnabled = GL11.glIsEnabled(GL11.GL_DEPTH_TEST);
 		boolean depthMaskEnabled = GL11.glGetBoolean(GL11.GL_DEPTH_WRITEMASK);
-
-		if (!depthTestEnabled) {
-			// RenderSystem.enableDepthTest();
-		}
-		if (!depthMaskEnabled) {
-			RenderSystem.depthMask(true);
-		}
-		// RenderSystem.depthFunc(GL11.GL_LEQUAL);
+		RenderSystem.depthMask(false);
 
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
@@ -251,12 +236,6 @@ public class SkyShipRenderFunctions {
 		BufferUploader.drawWithShader(buffer.build());
 
 		RenderSystem.disableBlend();
-
-		if (!depthTestEnabled) {
-			// RenderSystem.disableDepthTest();
-		}
-		if (!depthMaskEnabled) {
-			RenderSystem.depthMask(false);
-		}
+		RenderSystem.depthMask(depthMaskEnabled);
 	}
 }

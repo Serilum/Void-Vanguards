@@ -23,10 +23,10 @@ public class SkyShipFunctions {
 			return false;
 		}
 
-		long time = ClientConstants.mc.level.getGameTime();
-		float partialTicks = ClientConstants.mc.getFrameTimeNs();
+		float partialTicks = ClientConstants.mc.getTimer().getGameTimeDeltaPartialTick(false);
+		double time = SkyShipUtil.getAnimationTime(ClientConstants.mc, partialTicks);
 
-		float orbitAngle = time * SkyShipVariables.skyShipOrbitSpeed;
+		double orbitAngle = time * SkyShipVariables.skyShipOrbitSpeed;
 		float sunAngle = SkyShipUtil.getShipSunAngle(ClientConstants.mc, partialTicks);
 
 		Vector3f sunPos = new Vector3f(

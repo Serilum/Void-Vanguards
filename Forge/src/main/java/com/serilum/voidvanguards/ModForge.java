@@ -42,7 +42,7 @@ public class ModForge {
 		MinecraftForge.EVENT_BUS.register(ForgeVoidLivingEntityEvents.class);
 		MinecraftForge.EVENT_BUS.register(ForgeVoidUtilEvents.class);
 
-		if (!FMLEnvironment.dist.equals(Dist.CLIENT)) {
+		if (FMLEnvironment.dist.equals(Dist.CLIENT)) {
 			MinecraftForge.EVENT_BUS.register(ForgeVoidClientEvents.class);
 		}
 

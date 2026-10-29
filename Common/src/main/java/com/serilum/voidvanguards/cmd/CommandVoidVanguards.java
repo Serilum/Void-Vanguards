@@ -8,10 +8,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.natamus.collective.functions.MessageFunctions;
 import com.natamus.collective.functions.StringFunctions;
+import com.natamus.collective.implementations.networking.api.Dispatcher;
 import com.serilum.voidvanguards.data.HeadData;
 import com.serilum.voidvanguards.data.ServerSaveData;
+import com.serilum.voidvanguards.networking.packets.ToClientResetSkyShipPacket;
 import com.serilum.voidvanguards.parts.cosmos.functions.CosmosDimensionFunctions;
-import com.serilum.voidvanguards.parts.skyship.functions.SkyShipFunctions;
 import com.serilum.voidvanguards.parts.vanguard.functions.VanguardFunctions;
 import com.serilum.voidvanguards.parts.voidborn.functions.VoidbornFunctions;
 import com.serilum.voidvanguards.util.Reference;
@@ -37,10 +38,16 @@ public class CommandVoidVanguards {
 			.executes((command) -> {
 				CommandSourceStack source = command.getSource();
 
-				SkyShipFunctions.resetSkyShipVariables(true);
+				ServerPlayer serverPlayer;
+				try {
+					serverPlayer = source.getPlayerOrException();
+				}
+				catch (CommandSyntaxException ex) {
+					MessageFunctions.sendTranslatableMessage(source, "collective.shared.message.playeronly", ChatFormatting.RED);
+					return 1;
+				}
 
-				MessageFunctions.sendMessage(source, Component.translatable("collective.voidvanguards.message.skyship.reset").withStyle(ChatFormatting.DARK_GREEN));
-
+				Dispatcher.sendToClient(new ToClientResetSkyShipPacket(), serverPlayer);
 				return 1;
 			}))
 

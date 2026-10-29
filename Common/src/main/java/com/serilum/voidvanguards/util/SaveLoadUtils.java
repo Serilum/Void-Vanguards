@@ -8,7 +8,6 @@ import com.serilum.voidvanguards.data.ServerSaveData;
 import com.serilum.voidvanguards.networking.packets.ToClientSyncSaveDataPacket;
 import com.serilum.voidvanguards.parts.skyship.data.SkyShipVariables;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -68,7 +67,6 @@ public class SaveLoadUtils {
 		UUID playerUUID = serverPlayer.getUUID();
 
 		ServerLevel serverLevel = serverPlayer.serverLevel();
-		Registry<Level> levelRegistry = serverLevel.registryAccess().registryOrThrow(Registries.DIMENSION);
 
 		int x, y, z;
 		for (String saveData : saveDataTag.split(Constants.saveDataTagMainDelimiter)) {
