@@ -6,18 +6,20 @@ import com.serilum.voidvanguards.data.HeadData;
 import com.serilum.voidvanguards.parts.vanguard.data.VanguardConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.PowerParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.villager.VillagerType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -35,7 +37,7 @@ public class VanguardUtil {
 	public static List<LivingEntity> getVanguardsToSummon(Level level, int amount) {
 		List<LivingEntity> vanguardsToSummon = new ArrayList<>();
 		for (int i = 0; i < amount; i++) {
-			Villager vanguardVillager = EntityType.VILLAGER.create(level);
+			Villager vanguardVillager = EntityType.VILLAGER.create(level, EntitySpawnReason.EVENT);
 			vanguardVillager.setUUID(UUID.randomUUID());
 
 			ItemStack headStack;
@@ -44,13 +46,13 @@ public class VanguardUtil {
 				vanguardVillager.addTag(VanguardConstants.vanguardLeaderTag);
 				vanguardVillager.setCustomName(Component.translatable("collective.voidvanguards.vanguard.name.leader").withStyle(ChatFormatting.DARK_RED));
 
-				vanguardVillager.setVillagerData(vanguardVillager.getVillagerData().setType(VillagerType.SAVANNA));
+				vanguardVillager.setVillagerData(vanguardVillager.getVillagerData().withType(level.registryAccess(), VillagerType.SAVANNA));
 			} else {
 				headStack = HeadData.getGeneratedHead(HeadData.HeadType.VANGUARD);
 				vanguardVillager.addTag(VanguardConstants.vanguardRecruitTag);
 				vanguardVillager.setCustomName(Component.translatable("collective.voidvanguards.vanguard.name.recruit"));
 
-				vanguardVillager.setVillagerData(vanguardVillager.getVillagerData().setType(VillagerType.SNOW));
+				vanguardVillager.setVillagerData(vanguardVillager.getVillagerData().withType(level.registryAccess(), VillagerType.SNOW));
 			}
 			vanguardVillager.setItemSlot(EquipmentSlot.HEAD, headStack);
 
@@ -59,7 +61,7 @@ public class VanguardUtil {
 
 			vanguardVillager.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
 
-			vanguardVillager.getTags().add(VanguardConstants.vanguardTag);
+			vanguardVillager.entityTags().add(VanguardConstants.vanguardTag);
 
 			vanguardVillager.setPersistenceRequired();
 			vanguardVillager.setCanPickUpLoot(false);
@@ -94,18 +96,18 @@ public class VanguardUtil {
 		}
 	}
 	public static void spawnTeleportParticles(ServerLevel serverLevel, BlockPos blockPos) {
-		spawnParticles(serverLevel, blockPos, ParticleTypes.DRAGON_BREATH, 15);
+		spawnParticles(serverLevel, blockPos, PowerParticleOption.create(ParticleTypes.DRAGON_BREATH, 1.0F), 15);
 	}
-	public static void spawnParticles(ServerLevel serverLevel, BlockPos blockPos, SimpleParticleType simpleParticleType, int amount) {
+	public static void spawnParticles(ServerLevel serverLevel, BlockPos blockPos, ParticleOptions particleOptions, int amount) {
 		double x = blockPos.getX() + 0.5;
 		double y = blockPos.getY() + 0.5;
 		double z = blockPos.getZ() + 0.5;
 
 		for (int j = 0; j < amount; j++) {
-			double offsetX = (serverLevel.random.nextDouble() - 0.5) * 2.0;
-			double offsetY = serverLevel.random.nextDouble() * 1.5;
-			double offsetZ = (serverLevel.random.nextDouble() - 0.5) * 2.0;
-			serverLevel.sendParticles(simpleParticleType, x + offsetX, y + offsetY, z + offsetZ, 1, 0, 0, 0, 0);
+			double offsetX = (serverLevel.getRandom().nextDouble() - 0.5) * 2.0;
+			double offsetY = serverLevel.getRandom().nextDouble() * 1.5;
+			double offsetZ = (serverLevel.getRandom().nextDouble() - 0.5) * 2.0;
+			serverLevel.sendParticles(particleOptions,x + offsetX, y + offsetY, z + offsetZ, 1, 0, 0, 0, 0);
 		}
 	}
 
@@ -163,7 +165,7 @@ public class VanguardUtil {
 
 		if (distanceSquared > (radius * radius)) {
 			serverPlayer.teleportTo(centerPos.getX() + 0.5, serverPlayer.getY(), centerPos.getZ() + 0.5);
-			spawnTeleportParticles(serverPlayer.serverLevel(), centerPos);
+			spawnTeleportParticles(serverPlayer.level(), centerPos);
 		}
 	}
 

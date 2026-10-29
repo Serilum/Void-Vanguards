@@ -29,7 +29,7 @@ public class NeoForgeVoidLivingEntityEvents {
 	@SubscribeEvent
 	public static void onPlayerDeath(LivingDeathEvent e) {
 		Entity entity = e.getEntity();
-		if (entity.level().isClientSide) {
+		if (entity.level().isClientSide()) {
 			return;
 		}
 

@@ -27,7 +27,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.decoration.GlowItemFrame;
-import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.monster.illager.AbstractIllager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
@@ -187,7 +187,7 @@ public class VanguardFunctions {
 				GameProfile headGameProfile = HeadData.getHeadGameProfile(HeadData.HeadType.VANGUARD);
 
 				if (headGameProfile != null) {
-					EntityFunctions.setSkullBlockOwner(skullBlockEntity, new ResolvableProfile(headGameProfile));
+					EntityFunctions.setSkullBlockOwner(skullBlockEntity, ResolvableProfile.createResolved(headGameProfile));
 				}
 			}
 
@@ -204,7 +204,7 @@ public class VanguardFunctions {
 		generateRadioAtPlayerPosition(serverPlayer, 2);
 	}
 	public static void generateRadioAtPlayerPosition(ServerPlayer serverPlayer, int n) {
-		ServerLevel serverLevel = serverPlayer.serverLevel();
+		ServerLevel serverLevel = serverPlayer.level();
 
 		Vec3 eyePos = serverPlayer.getEyePosition();
 		Vec3 lookVec = serverPlayer.getLookAngle();
@@ -257,7 +257,7 @@ public class VanguardFunctions {
 		List<AbstractIllager> nearbyVoidborn = cosmosLevel.getEntitiesOfClass(
 				AbstractIllager.class,
 				serverPlayer.getBoundingBox().inflate(32.0D),
-				illager -> illager.getTags().contains(VoidbornConstants.voidbornTag)
+				illager -> illager.entityTags().contains(VoidbornConstants.voidbornTag)
 		);
 
 		for (AbstractIllager voidborn : nearbyVoidborn) {
@@ -287,7 +287,7 @@ public class VanguardFunctions {
 			}, 10);
 
 			TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
-				StoryFunctions.processVanguardsInVoidbornBase(serverPlayer.serverLevel(), serverPlayer, vanguards);
+				StoryFunctions.processVanguardsInVoidbornBase(serverPlayer.level(), serverPlayer, vanguards);
 			}, 20);
 		}, 20);
 	}

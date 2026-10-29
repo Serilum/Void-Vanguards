@@ -8,20 +8,21 @@ import com.serilum.voidvanguards.data.Constants;
 import com.serilum.voidvanguards.data.ServerSaveData;
 import com.serilum.voidvanguards.registry.objects.CosmosDimensions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -39,7 +40,7 @@ public class Util {
 	}
 
 	public static boolean isInCosmosDimension(ServerPlayer serverPlayer) {
-		return isCosmosDimension(serverPlayer.serverLevel());
+		return isCosmosDimension(serverPlayer.level());
 	}
 
 	public static boolean teleportPlayerToOriginalPosition(ServerPlayer serverPlayer) {
@@ -67,23 +68,23 @@ public class Util {
 	}
 
 	public static void addSendMessageTag(ServerPlayer serverPlayer, String message) {
-		serverPlayer.getTags().add(Constants.sendMessageTagPrefix + Constants.saveDataTagMainDelimiter + message);
+		serverPlayer.entityTags().add(Constants.sendMessageTagPrefix + Constants.saveDataTagMainDelimiter + message);
 	}
 
 	public static void removeTag(ServerPlayer serverPlayer, String tag) {
-		TaskFunctions.enqueueCollectiveServerTask(serverPlayer.getServer(), () -> {
-			serverPlayer.getTags().remove(tag);
+		TaskFunctions.enqueueCollectiveServerTask(serverPlayer.level().getServer(), () -> {
+			serverPlayer.entityTags().remove(tag);
 		}, 0);
 	}
 	public static void removeTag(MinecraftServer minecraftServer, Entity entity, String tag) {
 		TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
-			entity.getTags().remove(tag);
+			entity.entityTags().remove(tag);
 		}, 0);
 	}
 
 	public static void spawnLightning(ServerLevel serverLevel, BlockPos lightningPos, @Nullable ServerPlayer serverPlayer) {
-		LightningBolt lightningbolt = EntityType.LIGHTNING_BOLT.create(serverLevel);
-		lightningbolt.moveTo(Vec3.atBottomCenterOf(lightningPos));
+		LightningBolt lightningbolt = EntityType.LIGHTNING_BOLT.create(serverLevel, EntitySpawnReason.EVENT);
+		lightningbolt.snapTo(Vec3.atBottomCenterOf(lightningPos));
 		serverLevel.addFreshEntity(lightningbolt);
 
 		if (serverPlayer != null) {
@@ -98,7 +99,7 @@ public class Util {
 
 	public static InputStream getSchematicsInputStream(MinecraftServer minecraftServer, String schematicName, String fileExtension) {
 		try {
-			Optional<Resource> resourceOptional = minecraftServer.getResourceManager().getResource(ResourceLocation.parse(Reference.MOD_ID + ":schematics/" + schematicName + fileExtension));
+			Optional<Resource> resourceOptional = minecraftServer.getResourceManager().getResource(Identifier.parse(Reference.MOD_ID + ":schematics/" + schematicName + fileExtension));
 			if (resourceOptional.isPresent()) {
 				Resource resource = resourceOptional.get();
 				return resource.open();

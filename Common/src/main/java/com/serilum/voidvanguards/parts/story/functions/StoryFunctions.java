@@ -175,7 +175,7 @@ public class StoryFunctions {
 				continue;
 			}
 
-			if (mob.getTags().contains(VoidbornConstants.voidbornTag)) {
+			if (mob.entityTags().contains(VoidbornConstants.voidbornTag)) {
 				mob.addTag(Reference.MOD_ID + ".notarget");
 				mob.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.0D);
 				mob.setTarget(null);
@@ -273,7 +273,7 @@ public class StoryFunctions {
 			MessageFunctions.sendMessage(serverPlayer, speakerComponent.copy().append(Component.translatable(baseKey + "4").withStyle(ChatFormatting.DARK_PURPLE)), true);
 
 			for (Mob mob : serverLevel.getEntitiesOfClass(Mob.class, serverPlayer.getBoundingBox().inflate(120.0D))) {
-				Set<String> tags = mob.getTags();
+				Set<String> tags = mob.entityTags();
 				if (tags.contains(VoidbornConstants.voidbornTag) && !tags.contains(VoidbornConstants.voidbornLeaderTag)) {
 					VanguardUtil.spawnTeleportParticles(serverLevel, mob.blockPosition());
 
@@ -301,7 +301,7 @@ public class StoryFunctions {
 		voidbornLeader.addTag(Reference.MOD_ID + ".attacked");
 
 		for (Mob mob : serverLevel.getEntitiesOfClass(Mob.class, voidbornLeader.getBoundingBox().inflate(120.0D))) {
-			if (!mob.getTags().contains(VoidbornConstants.voidbornTag)) {
+			if (!mob.entityTags().contains(VoidbornConstants.voidbornTag)) {
 				return;
 			}
 
@@ -494,7 +494,7 @@ public class StoryFunctions {
 				}
 
 				TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
-					Registry<Enchantment> enchantmentRegistry = minecraftServer.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+					Registry<Enchantment> enchantmentRegistry = minecraftServer.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 					for (LivingEntity vanguard : vanguards) {
 						vanguard.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5F);
 						for (int n = 1; n <= 4; n++) {
@@ -531,7 +531,7 @@ public class StoryFunctions {
 							ServerSaveData.get().voidVanguardsCompletedPlayerUUIDS.add(serverPlayer.getUUID());
 							SaveLoadUtils.savePlayerData(serverPlayer);
 
-							CosmosDimensionFunctions.teleportPlayerToVoidbornBase(serverPlayer.serverLevel(), serverPlayer);
+							CosmosDimensionFunctions.teleportPlayerToVoidbornBase(serverPlayer.level(), serverPlayer);
 
 							TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
 								MessageFunctions.sendMessage(serverPlayer, Component.translatable("collective.voidvanguards.message.voidborn.endAsteroid.1").withStyle(ChatFormatting.DARK_GREEN), true);

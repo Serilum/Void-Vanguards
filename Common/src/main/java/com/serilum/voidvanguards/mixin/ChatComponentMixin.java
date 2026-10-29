@@ -1,9 +1,9 @@
 package com.serilum.voidvanguards.mixin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.serilum.voidvanguards.data.ClientConstants;
 import com.serilum.voidvanguards.data.ClientVariables;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ChatComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ChatComponent.class, priority = 1001)
 public class ChatComponentMixin {
-	@Inject(method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIIZ)V", at = @At("HEAD"))
-	private void fadeChatDuringFlicker(GuiGraphics guiGraphics, int $$1, int $$2, int $$3, boolean $$4, CallbackInfo ci) {
+	@Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;IIILnet/minecraft/client/gui/components/ChatComponent$DisplayMode;Z)V", at = @At(value = "HEAD"))
+	private void fadeChatDuringFlicker(GuiGraphicsExtractor guiGraphics, Font font, int $$2, int $$3, int $$4, ChatComponent.DisplayMode displayMode, boolean $$6, CallbackInfo ci) {
 		if (ClientVariables.lastFlickerAlpha <= 0.01F) {
 			return;
 		}
@@ -21,13 +21,9 @@ public class ChatComponentMixin {
 		int screenWidth = ClientConstants.mc.getWindow().getGuiScaledWidth();
 		int screenHeight = ClientConstants.mc.getWindow().getGuiScaledHeight();
 
-		int chatHeight = ClientConstants.mc.gui.getChat().getHeight();
-
 		int alphaInt = (int) (ClientVariables.lastFlickerAlpha * 204) & 0xFF;
 		int color = (alphaInt << 24);
 
-		RenderSystem.disableDepthTest();
 		guiGraphics.fill(0, 0, screenWidth, screenHeight, color);
-		RenderSystem.enableDepthTest();
 	}
 }

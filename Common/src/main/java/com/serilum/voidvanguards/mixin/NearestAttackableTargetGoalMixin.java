@@ -5,6 +5,7 @@ import com.serilum.voidvanguards.data.ServerSaveData;
 import com.serilum.voidvanguards.parts.voidborn.data.VoidbornConstants;
 import com.serilum.voidvanguards.util.Reference;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,11 +30,11 @@ public abstract class NearestAttackableTargetGoalMixin extends TargetGoal {
 
 	@Inject(method = "findTarget", at = @At("TAIL"))
 	private void onFindTarget(CallbackInfo ci) {
-		if (this.mob.level().isClientSide) {
+		if (this.mob.level().isClientSide()) {
 			return;
 		}
 
-		if (!this.mob.getTags().contains(VoidbornConstants.voidbornTag)) {
+		if (!this.mob.entityTags().contains(VoidbornConstants.voidbornTag)) {
 			return;
 		}
 
@@ -40,7 +42,7 @@ public abstract class NearestAttackableTargetGoalMixin extends TargetGoal {
 			return;
 		}
 
-		boolean preventTargeting = this.mob.getTags().contains(Reference.MOD_ID + ".notarget");
+		boolean preventTargeting = this.mob.entityTags().contains(Reference.MOD_ID + ".notarget");
 
 		if (!preventTargeting) {
 			if (ServerSaveData.get().gaveVoidbornLeaderRadioPlayerUUIDS.contains(player.getUUID())) {
@@ -49,13 +51,13 @@ public abstract class NearestAttackableTargetGoalMixin extends TargetGoal {
 		}
 
 		if (!preventTargeting) {
-			ItemStack helmet = player.getInventory().getArmor(3);
-			ItemStack voidbornHead = HeadData.HeadType.VOIDBORN.headStack;
+			ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
+			ItemStack voidbornHead = HeadData.getGeneratedHead(HeadData.HeadType.VOIDBORN);
 
 			if (helmet.is(Items.PLAYER_HEAD)) {
 				if (helmet.has(DataComponents.PROFILE) && voidbornHead.has(DataComponents.PROFILE)) {
-					var wornProfile = helmet.get(DataComponents.PROFILE);
-					var voidbornProfile = voidbornHead.get(DataComponents.PROFILE);
+					ResolvableProfile wornProfile = helmet.get(DataComponents.PROFILE);
+					ResolvableProfile voidbornProfile = voidbornHead.get(DataComponents.PROFILE);
 
 					if (wornProfile != null && wornProfile.equals(voidbornProfile)) {
 						preventTargeting = true;

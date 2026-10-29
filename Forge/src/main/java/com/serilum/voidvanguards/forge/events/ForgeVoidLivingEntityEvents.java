@@ -8,9 +8,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+
+import java.lang.invoke.MethodHandles;
 
 public class ForgeVoidLivingEntityEvents {
+	public static void registerEventsInBus() {
+		BusGroup.DEFAULT.register(MethodHandles.lookup(), ForgeVoidLivingEntityEvents.class);
+	}
+
 	@SubscribeEvent
 	public static void onLivingTick(LivingEvent.LivingTickEvent e) {
 		LivingEntity livingEntity = e.getEntity();
@@ -18,17 +25,15 @@ public class ForgeVoidLivingEntityEvents {
 	}
 
 	@SubscribeEvent
-	public static void onEntityDamage(LivingAttackEvent e) {
+	public static boolean onEntityDamage(LivingAttackEvent e) {
 		Entity entity = e.getEntity();
-		if (!VoidLivingEntityEvents.onEntityDamage(entity.level(), entity, e.getSource(), e.getAmount())) {
-			e.setCanceled(true);
-		}
+		return !VoidLivingEntityEvents.onEntityDamage(entity.level(), entity, e.getSource(), e.getAmount());
 	}
 
 	@SubscribeEvent
 	public static void onPlayerDeath(LivingDeathEvent e) {
 		Entity entity = e.getEntity();
-		if (entity.level().isClientSide) {
+		if (entity.level().isClientSide()) {
 			return;
 		}
 

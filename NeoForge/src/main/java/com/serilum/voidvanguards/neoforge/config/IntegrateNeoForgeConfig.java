@@ -1,7 +1,7 @@
 package com.serilum.voidvanguards.neoforge.config;
 
-import com.natamus.collective.config.DuskConfig;
 import com.serilum.voidvanguards.util.Reference;
+import com.natamus.collective.config.DuskConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;

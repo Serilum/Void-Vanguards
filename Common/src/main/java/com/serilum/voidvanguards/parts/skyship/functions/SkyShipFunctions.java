@@ -23,10 +23,10 @@ public class SkyShipFunctions {
 			return false;
 		}
 
-		long time = ClientConstants.mc.level.getGameTime();
-		float partialTicks = ClientConstants.mc.getFrameTimeNs();
+		float partialTicks = ClientConstants.mc.getDeltaTracker().getGameTimeDeltaPartialTick(false);
+		double time = SkyShipUtil.getAnimationTime(ClientConstants.mc, partialTicks);
 
-		float orbitAngle = time * SkyShipVariables.skyShipOrbitSpeed;
+		double orbitAngle = time * SkyShipVariables.skyShipOrbitSpeed;
 		float sunAngle = SkyShipUtil.getShipSunAngle(ClientConstants.mc, partialTicks);
 
 		Vector3f sunPos = new Vector3f(
@@ -89,7 +89,7 @@ public class SkyShipFunctions {
 			SkyShipVariables.skyShipDetailLevel += 1;
 			SkyShipVariables.ticksLeftForMoreDetail = ConfigHandler.ticksNeededForMoreSkyShipDetail;
 
-			player.displayClientMessage(Component.translatable("collective.voidvanguards.message.skyship.more_detailed").withStyle(ChatFormatting.GREEN), true);
+			player.sendOverlayMessage(Component.translatable("collective.voidvanguards.message.skyship.more_detailed").withStyle(ChatFormatting.GREEN));
 			SkyShipVariables.sentFocusMessage = true;
 		}
 	}
@@ -101,7 +101,7 @@ public class SkyShipFunctions {
 
 		SkyShipVariables.triggeredSkyShipEvent = true;
 
-		player.displayClientMessage(Component.translatable("collective.voidvanguards.message.skyship.explosion").withStyle(ChatFormatting.BLUE), true);
+		player.sendOverlayMessage(Component.translatable("collective.voidvanguards.message.skyship.explosion").withStyle(ChatFormatting.BLUE));
 
 		Dispatcher.sendToServer(new ToServerTriggerSkyShipEventPacket());
 	}

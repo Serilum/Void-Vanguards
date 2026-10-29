@@ -21,7 +21,7 @@ public class MobMixin {
 	@Inject(method = "dropCustomDeathLoot(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;Z)V", at = @At(value = "HEAD"))
 	protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource damageSource, boolean b, CallbackInfo ci) {
 		Mob mob = (Mob)(Object)this;
-		if (!mob.getTags().contains(VoidbornConstants.voidbornTag)) {
+		if (!mob.entityTags().contains(VoidbornConstants.voidbornTag)) {
 			return;
 		}
 
@@ -43,14 +43,14 @@ public class MobMixin {
 
 	@Inject(method = "getTarget()Lnet/minecraft/world/entity/LivingEntity;", at = @At(value = "HEAD"), cancellable = true)
 	public void getTarget(CallbackInfoReturnable<LivingEntity> cir) {
-		if (((Mob)(Object)this).getTags().contains(Reference.MOD_ID + ".notarget")) {
+		if (((Mob)(Object)this).entityTags().contains(Reference.MOD_ID + ".notarget")) {
 			cir.setReturnValue(null);
 		}
 	}
 
 	@Inject(method = "getTargetFromBrain()Lnet/minecraft/world/entity/LivingEntity;", at = @At(value = "HEAD"), cancellable = true)
 	protected final void getTargetFromBrain(CallbackInfoReturnable<LivingEntity> cir) {
-		if (((Mob)(Object)this).getTags().contains(Reference.MOD_ID + ".notarget")) {
+		if (((Mob)(Object)this).entityTags().contains(Reference.MOD_ID + ".notarget")) {
 			cir.setReturnValue(null);
 		}
 	}

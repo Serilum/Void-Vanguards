@@ -8,9 +8,16 @@ import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+
+import java.lang.invoke.MethodHandles;
 
 public class ForgeVoidEntityEvents {
+	public static void registerEventsInBus() {
+		BusGroup.DEFAULT.register(MethodHandles.lookup(), ForgeVoidEntityEvents.class);
+	}
+
 	@SubscribeEvent
 	public static void onEntityJoin(EntityJoinLevelEvent e) {
 		VoidEntityEvents.onEntityJoin(e.getLevel(), e.getEntity());
@@ -40,9 +47,7 @@ public class ForgeVoidEntityEvents {
 	}
 
 	@SubscribeEvent
-	public static void onBoatClick(PlayerInteractEvent.EntityInteract e) {
-		if (VoidEntityEvents.onEntityInteract(e.getEntity(), e.getLevel(), e.getHand(), e.getTarget(), null).equals(InteractionResult.SUCCESS)) {
-			e.setCanceled(true);
-		}
+	public static boolean onBoatClick(PlayerInteractEvent.EntityInteractSpecific e) {
+		return VoidEntityEvents.onEntityInteract(e.getEntity(), e.getLevel(), e.getHand(), e.getTarget(), null).equals(InteractionResult.SUCCESS);
 	}
 }

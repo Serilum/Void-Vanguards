@@ -4,7 +4,7 @@ import com.serilum.voidvanguards.parts.voidborn.data.VoidbornConstants;
 import com.serilum.voidvanguards.parts.voidborn.util.VoidbornUtil;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.monster.Vindicator;
+import net.minecraft.world.entity.monster.illager.Vindicator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +15,7 @@ public class VindicatorMixin {
 	@Inject(method = "getAmbientSound()Lnet/minecraft/sounds/SoundEvent;", at = @At(value = "HEAD"), cancellable = true)
 	protected void getAmbientSound(CallbackInfoReturnable<SoundEvent> cir) {
 		Vindicator vindicator = (Vindicator)(Object)this;
-		if (vindicator.getTags().contains(VoidbornConstants.voidbornTag)) {
+		if (vindicator.entityTags().contains(VoidbornConstants.voidbornTag)) {
 			if (VoidbornUtil.shouldMakeAmbientSound(vindicator.level())) {
 				cir.setReturnValue(SoundEvents.WARDEN_HEARTBEAT);
 			}
@@ -27,14 +27,14 @@ public class VindicatorMixin {
 
 	@Inject(method = "getDeathSound()Lnet/minecraft/sounds/SoundEvent;", at = @At(value = "HEAD"), cancellable = true)
 	protected void getDeathSound(CallbackInfoReturnable<SoundEvent> cir) {
-		if (((Vindicator)(Object)this).getTags().contains(VoidbornConstants.voidbornTag)) {
+		if (((Vindicator)(Object)this).entityTags().contains(VoidbornConstants.voidbornTag)) {
 			cir.setReturnValue(SoundEvents.VILLAGER_HURT);
 		}
 	}
 
 	/*@Inject(method = "getHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)Lnet/minecraft/sounds/SoundEvent;", at = @At(value = "HEAD"), cancellable = true)
 	protected void getHurtSound(DamageSource $$0, CallbackInfoReturnable<SoundEvent> cir) {
-		if (((Vindicator)(Object)this).getTags().contains(VoidbornConstants.voidbornTag)) {
+		if (((Vindicator)(Object)this).entityTags().contains(VoidbornConstants.voidbornTag)) {
 			cir.setReturnValue(SoundEvents.WARDEN_DEATH);
 		}
 	}*/

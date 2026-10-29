@@ -62,7 +62,7 @@ public class VoidbornFunctions {
 			}
 
 			TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
-				Registry<Enchantment> enchantmentRegistry = overworldLevel.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+				Registry<Enchantment> enchantmentRegistry = overworldLevel.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
 				for (BlockPos blockEntityPos : parsedSchematicObject.blockEntityPositions) {
 					BlockEntity blockEntity = overworldLevel.getBlockEntity(blockEntityPos);
@@ -114,7 +114,7 @@ public class VoidbornFunctions {
 			cosmosLevel.setBlock(teleportBackButtonPos, Blocks.WARPED_BUTTON.defaultBlockState().setValue(ButtonBlock.FACING, Direction.WEST), 3);
 
 			TaskFunctions.enqueueCollectiveServerTask(minecraftServer, () -> {
-				Registry<Enchantment> enchantmentRegistry = cosmosLevel.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+				Registry<Enchantment> enchantmentRegistry = cosmosLevel.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 				for (BlockPos entityBlockPos : parsedSchematicObject.blockEntityPositions) {
 					if (cosmosLevel.getBlockState(entityBlockPos).getBlock().equals(Blocks.CRIMSON_SIGN)) {
 						VoidbornUtil.replaceSignWithVoidbornMob(cosmosLevel, entityBlockPos, enchantmentRegistry);
@@ -215,7 +215,7 @@ public class VoidbornFunctions {
 		List<Mob> nearbyEntities = cosmosLevel.getEntitiesOfClass(
 			Mob.class,
 			serverPlayer.getBoundingBox().inflate(120.0D),
-			e -> e.getTags().contains(VoidbornConstants.voidbornTag)
+			e -> e.entityTags().contains(VoidbornConstants.voidbornTag)
 		);
 
 		int voidbornCount = nearbyEntities.size();

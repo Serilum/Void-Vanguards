@@ -8,12 +8,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,10 +22,10 @@ public class OrbitalRadioItem extends Item {
 		super(properties);
 	}
 
-	public void releaseUsing(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull LivingEntity livingEntity, int n) {
+	public boolean releaseUsing(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull LivingEntity livingEntity, int n) {
 		if (livingEntity instanceof Player player) {
 			int useDuration = this.getUseDuration(itemStack, livingEntity) - n;
-			if (useDuration >= 25 && !level.isClientSide) {
+			if (useDuration >= 25 && !level.isClientSide()) {
 				if (ServerSaveData.get().vanguardStationGeneratedPlayerUUIDS.contains(player.getUUID())) {
 					MessageFunctions.sendMessage(player, Component.translatable("item.voidvanguards.orbital_radio.useSuccess").withStyle(ChatFormatting.DARK_GRAY));
 
@@ -36,19 +36,19 @@ public class OrbitalRadioItem extends Item {
 				}
 			}
 		}
+		return false;
 	}
 
 	public int getUseDuration(@NotNull ItemStack itemStack, @NotNull LivingEntity livingEntity) {
 		return 72000;
 	}
 
-	public @NotNull UseAnim getUseAnimation(@NotNull ItemStack itemStack) {
-		return UseAnim.BOW;
+	public @NotNull ItemUseAnimation getUseAnimation(@NotNull ItemStack itemStack) {
+		return ItemUseAnimation.BOW;
 	}
 
-	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand interactionHand) {
-		ItemStack itemStack = player.getItemInHand(interactionHand);
+	public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand interactionHand) {
 		player.startUsingItem(interactionHand);
-		return InteractionResultHolder.consume(itemStack);
+		return InteractionResult.CONSUME;
 	}
 }
